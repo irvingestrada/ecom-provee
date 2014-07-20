@@ -27,7 +27,8 @@
 		}
 	</script>
 	<div style="float:left;margin-bottom:20px;">
-		<a href="/index.php?nav=newproduct">Agregar Producto</a>
+		<a href="/index.php?nav=newproduct">
+		<button class="btn btn-warning btn-large"><i class="icon-white icon-heart"></i> Agregar Producto</button></a>
 	</div>
 
 

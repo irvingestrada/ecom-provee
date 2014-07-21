@@ -1,6 +1,10 @@
 <?php
 
 $nav = ($_GET['nav'] ? $_GET['nav'] : 'home');
+ 
+ if ($_SESSION['logueado']==false){
+ 	$nav = "";
+ }
 
 switch($nav){
 	case 'home' :
@@ -15,8 +19,14 @@ switch($nav){
 	case 'newproduct' :
 		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/nuevo_producto.php";
 	break;
+	case 'ventas' :
+		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/ventas.php";
+	break;
+	case 'store' :
+		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/modificar_tienda.php";
+	break;
 	default:
-		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/home.php";
+		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/logueate.php";
 	break;
 }
 

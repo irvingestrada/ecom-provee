@@ -34,6 +34,7 @@
 	array_push($exclude, 0);
 	
 	loadjs('js/editproduct.js');
+	loadjs('js/uploader_preview.js');
 
 	foreach($category as $cat) {
 		$goOn = 1;             
@@ -78,11 +79,11 @@
 	}
 	.fileSelect
 	{
+		/*
 	  -moz-border-bottom-colors: none;
 	    -moz-border-left-colors: none;
 	    -moz-border-right-colors: none;
 	    -moz-border-top-colors: none;
-	    /* background: -moz-linear-gradient(center top , rgba(255, 255, 255, 0.3) 50%, #FFCC00 50%, #FFCC00) repeat scroll 0 0 #FFCC00; */
 		background: none repeat scroll 0 0 #FFCC00;
 	    border-color: #FFCC00 #FFCC00 #9F9F9F;
 	    border-image: none;
@@ -94,12 +95,13 @@
 	    cursor: pointer;
 	    padding: 4px;
 	    text-shadow: 0 1px #FFFFFF;
+	    */
 	}
 	.fileSelect:hover:before {
-	  border-color: black;
+	  /*border-color: black;*/
 	}
 	.fileSelect:active:before {
-	  background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+	  /*background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);*/
 	}
 	.list_content li span a {
 	    color: #000000 !important;
@@ -147,13 +149,13 @@
   <div class="form-group">
     <label for="product_price" class="col-sm-2 control-label">Precio:</label>
     <div class="col-sm-10">
-      <input type="number" class="form-control" id="product_price" name="product_price" placeholder="Precio" value="<?php echo $pro_info["price"]; ?>" pattern="[0-9]*" required>
+      <input type="number" class="form-control" id="product_price" name="product_price" placeholder="Precio" value="<?php echo $pro_info["price"]; ?>" pattern="[0-9]*" onkeypress="fKeyPress(event,'NP');" required>
     </div>
   </div>
   <div class="form-group">
     <label for="product_quantity" class="col-sm-2 control-label">Cantidad:</label>
     <div class="col-sm-10">
-      <input type="number" class="form-control" id="product_quantity" name="product_quantity" placeholder="Cantidad" value="<?php echo $pro_info["quantity"]; ?>" required pattern="[0-9]*">
+      <input type="number" class="form-control" id="product_quantity" name="product_quantity" placeholder="Cantidad" value="<?php echo $pro_info["quantity"]; ?>" onkeypress="fKeyPress(event,'N');" required pattern="[0-9]*">
     </div>
   </div>
   <div class="form-group">
@@ -170,8 +172,17 @@
   <div class="form-group">
   	<label for="product_size" class="col-sm-2 control-label">Imagenes:</label>
   	<div class="col-sm-10">
-		<button class="fileSelect" name="product_image">Subir Imagen</button>
+		<button class="btn btn-warning btn-large fileSelect" name="product_image" style="	">Subir Imagen</button>
+		
+		<a href="javascript:;" onclick="showOtherImage();">
+		<button class="btn btn-warning btn-large fileSelect"><i class="icon-white icon-heart"></i> Agregar otra imagen</button>
+		</a>
+		<div id="otherimages" style="margin-left:0px;"> </div>
 	</div>
+
+	<div id="preview-images" >
+	</div>
+	
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
@@ -188,41 +199,89 @@ document.querySelector('.fileSelect').addEventListener('click', function(e) {
   	document.querySelector('#product_image').click();
 }, false);
 
-var i=2;
+	var contador_oficial_imagenes=1;
 
 function showOtherImage() {
-	if (i==4){
+	if (contador_oficial_imagenes==3){
 		alert("Máximo 3 imagenes por producto");
-	return false;
+		return false;
+	}	
+	var newdiv = document.createElement('div');
+
+	newdiv.setAttribute("id","childDiv"+contador_oficial_imagenes);
+
+	newdiv.innerHTML = "&nbsp;<input type='file' id='images"+contador_oficial_imagenes+"' name='images[]'  class='btn btn-warning btn-large fileSelect' />&nbsp;&nbsp;<a class='btn btn-warning btn-large fileSelect' href=\"javascript:;\" onclick=\"removeEvent('childDiv"+contador_oficial_imagenes+"')\">Quitar</a>";
+
+	var ni = document.getElementById('otherimages');
+
+	ni.appendChild(newdiv);
+
+	contador_oficial_imagenes++;
+
+} 
+
+
+function removeEvent(divNum){
+
+	var d = document.getElementById('otherimages');
+
+	var olddiv = document.getElementById(divNum);
+
+	d.removeChild(olddiv);
+
+	contador_oficial_imagenes--;
+
+} 
+
+function fKeyPress(e,tipo){
+	//FUNCION PARA VALIDAR CAMPOS
+	var evt = (e) ? e : event
+	var dKey = (evt.which) ? evt.which : evt.keyCode;
+	if(dKey==13) return;
+
+	switch(tipo){
+		case "NP": //Numeros - Acepta �nicamente numeros
+			var arreglo="0123456789.";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "N": //Numeros - Acepta �nicamente numeros
+			var arreglo="0123456789";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "F": //Fecha - Acepta �nicamente numeros y Diagonal
+			var arreglo="0123456789/";
+			if(dKey==8)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "A": //Alfanumerico - Acepta alfanumerico
+			var arreglo='ABCDEFGHIJGKLMN�OPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz0123456789 ';
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "S": //Alfabetico - Acepta letras y signos especificos
+			var arreglo="A�BCDE�FGHI�JGKLMN�O�PQRSTU�VWXYZa�bcde�fghi�jklmn�o�pqrstu�vwxyz,.-/ ";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "L": //ABC - Acepta �nicamente letras y espacio
+			var arreglo="ABCDEFGHIJGKLMN�OPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz ";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "R": //Alfabetico - Acepta letras y numeros
+			var arreglo="ABCDEFGHIJGKLMNOPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz1234567890,.-/ ";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "D": //Alfabetico - Acepta letras y numeros
+			var arreglo=" ABCDEFGHIJGKLMNOPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz1234567890";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+	}
+
+	if (document.all) { //IE
+		if(arreglo.indexOf(String.fromCharCode(dKey),0)!=-1){ event.returnValue = true;	}
+		else{ event.returnValue = false; }
+	}else { //Mozilla
+		if(arreglo.indexOf(String.fromCharCode(dKey),0)==-1){ if (e.cancelable) { e.preventDefault(); }	}
+	}
 }
-	
-var newdiv = document.createElement('div');
-
-newdiv.setAttribute("id","childDiv"+i);
-
-newdiv.innerHTML = "&nbsp;<input type='file' id='images"+i+"' name='images[]'  style='width:85px;'/>&nbsp;&nbsp;<a style='color:#0000FF;' href=\"javascript:;\" onclick=\"removeEvent('childDiv"+i+"')\">Quitar</a>";
-
-var ni = document.getElementById('otherimages');
-
-ni.appendChild(newdiv);
-
-i++;
-
-} 
-
-
-function removeEvent(divNum)
-
-{
-
-var d = document.getElementById('otherimages');
-
-var olddiv = document.getElementById(divNum);
-
-d.removeChild(olddiv);
-
-i--;
-
-} 
 
 </script>
+
+

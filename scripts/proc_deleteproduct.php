@@ -1,5 +1,8 @@
 <?php
+	
 		include "core.php";
+		if (!defined('_PS_VERSION_'))
+    	exit;
 
 		$id = Tools::getValue('form_product_id');
 

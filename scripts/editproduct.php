@@ -110,10 +110,8 @@
   	$id_product = $id_product_info['id_product'];
   	$product = new Product($id_product);
 
-  	var_dump($id_image_detail);
-
 	$id_image_detail = $product->getImages($id_lang);
-
+	
 	$product_link_rewrite = Db::getInstance()->getRow("select * from `". _DB_PREFIX_."product_lang` where `id_product`=".$id_product." and `id_lang`=1");
 	$name = $product_link_rewrite['link_rewrite'];
 	//var_dump($id_image_detail);

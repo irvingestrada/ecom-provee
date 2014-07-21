@@ -1,5 +1,7 @@
 <?php
 		include "core.php";
+		if (!defined('_PS_VERSION_'))
+    	exit;
 		$obj_seller_product = new SellerProductDetail();
         $obj_mpshop = new MarketplaceShop();
 		$obj_mp_customer = new MarketplaceCustomer();
@@ -44,7 +46,9 @@
 			exit;
 		}
 
+		$obj_seller_info_detail = new SellerInfoDetail();
 
+		$buscando_categoria = $obj_seller_info_detail->sellerDetail($id_seller);
 
 		Hook::exec('actionBeforeAddproduct', array('mp_seller_id' => $id_seller));
 		$approve_type = Configuration::getGlobalValue('PRODUCT_APPROVE');
@@ -55,11 +59,12 @@
 		$obj_seller_product->product_name = $product_name;
 		$obj_seller_product->description = $product_description;
 		$obj_seller_product->short_description = $short_description;
-		$obj_seller_product->id_category = $product_category[0];
+		$obj_seller_product->id_category = $buscando_categoria['id_category'];
 		$obj_seller_product->ps_id_shop = $context->shop->id;
 		$obj_seller_product->id_shop = $mp_id_shop;
 
 		$obj_seller_product->active = 1;
+		
 		$obj_seller_product->save();	
 		
 		$seller_product_id = $obj_seller_product->id;
@@ -67,6 +72,8 @@
 		$obj_seller_product_category = new SellerProductCategory();
 		$obj_seller_product_category->id_seller_product = $seller_product_id;
 		$obj_seller_product_category->is_default = 1;
+		$obj_seller_product_category->id_category = $buscando_categoria['id_category'];
+		$obj_seller_product_category->add();
 		$i=0;
 		/*	
 		foreach($product_category as $p_category){
@@ -76,18 +83,7 @@
 			$obj_seller_product_category->add();
 			$i++;
 		}*/
-
-		$obj_seller_info_detail = new SellerInfoDetail();
-
-		$buscando_categoria = $obj_seller_info_detail->sellerDetail($obj_seller_product->id_seller);
-
-		$obj_seller_product_category->id_category = $buscando_categoria['id_category'];
-		$obj_seller_product_category->is_default = 0;
-		$obj_seller_product_category->add();
-
 		
-		
-		//$address    = "modules/marketplace/img/product_img/";
 		$address    = BAZARINGA_PATH."modules/marketplace/img/product_img/";
 		
 		if(isset($_FILES["product_image"])) {
@@ -145,20 +141,26 @@
 			
 			move_uploaded_file($other_images[$i], $address . $image_name);
 		}
+		
+		$active = "1";
 
 		if($seller_product_id){
 					// if active, then entry of a product in ps_product table...
 			if($active){
-				$obj_seller_product = new SellerProductDetail();
+				//$obj_seller_product = new SellerProductDetail();
 				$image_dir = BAZARINGA_PATH."modules/marketplace/img/product_img";
 				// creating ps_product when admin setting is default
+				
 				$ps_product_id = $obj_seller_product->createPsProductByMarketplaceProduct($seller_product_id,$image_dir, $active);
+				
 				if($ps_product_id){
 					// mapping of ps_product and mp_product id
 					$mps_product_obj = new MarketplaceShopProduct();
+					
 					$mps_product_obj->id_shop = $mp_id_shop;
 					$mps_product_obj->marketplace_seller_id_product = $seller_product_id;
 					$mps_product_obj->id_product = $ps_product_id;
+					$mps_product_obj->active = $active;
 					$mps_product_obj->add();
 				}
 			}

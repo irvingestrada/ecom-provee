@@ -9,7 +9,7 @@
         <title>Proveedores Bazaringa</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <style>
             body {
@@ -58,15 +58,7 @@
           <a class="navbar-brand" href="#">Proveedores</a>
         </div>
         <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" role="form">
-            <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Iniciar Sesion</button>
-          </form>
+          <?php include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/login.php"; ?>
         </div><!--/.navbar-collapse -->
       </div>
     </div>
@@ -90,7 +82,7 @@
       <hr>
 
       <footer>
-        <p>&copy; Company 2014</p>
+        <p>&copy; Bazaringa Company 2014</p>
       </footer>
     </div> <!-- /container -->        <script src="/js/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>

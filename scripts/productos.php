@@ -1,14 +1,13 @@
 <?php
 	
-
+	include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/core.php";
 	include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/menu.php";
 
 	$obj_mp_customer = new MarketplaceCustomer();
 	$obj_mp_seller = new SellerInfoDetail();
 	$obj_mp_shop = new MarketplaceShop();
 	$obj_mp_seller_product = new SellerProductDetail();
-
-	$productList = $obj_mp_seller_product->getProductList($marketplace_seller_id,$orderby,$orderway,1, 100);
+	$productList = $obj_mp_seller_product->getProductList($_SESSION["marketplace_seller_id"],$orderby,$orderway,1, 100);
 	
 	?>
 	<script type="text/javascript">

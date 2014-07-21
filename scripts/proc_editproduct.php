@@ -1,6 +1,7 @@
 <?php
 	include "core.php";
-	//var_dump($_POST);
+	if (!defined('_PS_VERSION_'))
+    	exit;
 
 	$obj_marketplace_product = new SellerProductDetail();
 

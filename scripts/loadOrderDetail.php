@@ -1,0 +1,107 @@
+<?php
+	include "basic_include.php";
+	function getRealStatus ($id){
+    switch ($id) {
+      case 'Payment accepted':
+        return 'Pago Realizado';
+        break;
+      case 'Shipped':
+        return 'Enviado';
+        break;
+      case 'Delivered':
+        return 'Entregado';
+        break;
+      case 'Canceled':
+        return 'Cancelado';
+        break;
+      case 'Refund':
+        return 'Devolución';
+        break;
+      case 'Tarjeta de Credito / Debito':
+        return 'Pago TC/Debito';
+        break;
+      case 'Esperando respuesta proveedor de pago':
+        return 'Pago TC/Debito';
+        break;
+      case 'Pago con Oxxo':
+        return 'Pago en Oxxo';
+        break;
+      default:
+          $pago = "Error estatus";
+        break;
+      return $pago;
+    }
+  }
+	$id_order = $_GET['id_order'];
+
+	$ord_obj = new Order($id_order);
+
+	$currency_detail = Currency::getCurrency($ord_obj->id_currency);
+
+	$dashboard   = Db::getInstance()->executeS("SELECT cntry.`name` as `country`,stat.`name` as `state`,ads.`postcode` as `postcode`,ads.`city` as `city`,ads.`phone` as `phone`,ads.`phone_mobile` as `mobile`,ordd.`id_order_detail` as `id_order_detail`,ordd.`product_name` as `ordered_product_name`,ordd.`product_price` as total_price,ordd.`product_quantity` as qty, ordd.`id_order` as id_order,ord.`id_customer` as order_by_cus,ord.`payment` as payment_mode,ord.`current_state` as current_state,cus.`firstname` as name,cus.`lastname` as lastname,ord.`date_add` as `date`,ords.`name`as order_status,ads.`address1` as `address1`,ads.`address2` as `address2`, ordd.* from  `"._DB_PREFIX_."order_detail` ordd join `"._DB_PREFIX_."orders` ord ON (ord.`id_order` = ordd.`id_order`) join `"._DB_PREFIX_."customer` cus on (cus.`id_customer`= ord.`id_customer`) join `"._DB_PREFIX_."order_state_lang` ords on (ord.`current_state`= ords.`id_order_state`) join `"._DB_PREFIX_."address` ads on (ads.`id_customer`= cus.`id_customer`) join `"._DB_PREFIX_."state` stat on (stat.`id_state`= ads.`id_state`) join `"._DB_PREFIX_."country_lang` cntry on (cntry.`id_country`= ads.`id_country`) where ordd.`id_order`=".$id_order." and cntry.`id_lang`=".$id_lang);  
+
+	if(empty($dashboard)) {
+		$dashboard   = Db::getInstance()->executeS("SELECT cntry.`name` as `country`,ads.`postcode` as `postcode`,ads.`city` as `city`,ads.`phone` as `phone`,ads.`phone_mobile` as `mobile`,ordd.`id_order_detail` as `id_order_detail`,ordd.`product_name` as `ordered_product_name`,ordd.`product_price` as total_price,ordd.`product_quantity` as qty, ordd.`id_order` as id_order,ord.`id_customer` as order_by_cus,ord.`payment` as payment_mode,ord.`current_state` as current_state,cus.`firstname` as name,cus.`lastname` as lastname,ord.`date_add` as `date`,ords.`name`as order_status,ads.`address1` as `address1`,ads.`address2` as `address2` from  `"._DB_PREFIX_."order_detail` ordd join `"._DB_PREFIX_."orders` ord ON (ord.`id_order` = ordd.`id_order`) join `"._DB_PREFIX_."customer` cus on (cus.`id_customer`= ord.`id_customer`) join `"._DB_PREFIX_."order_state_lang` ords on (ord.`current_state`= ords.`id_order_state`) join `"._DB_PREFIX_."address` ads on (ads.`id_customer`= cus.`id_customer`) join `"._DB_PREFIX_."country_lang` cntry on (cntry.`id_country`= ads.`id_country`) where ordd.`id_order`=".$id_order." and cntry.`id_lang`=".$id_lang);  
+		
+		$dashboard_state = "N/A";
+	} else {
+		$dashboard_state = $dashboard[0]['state'];
+	}
+	$a=0;
+	foreach($dashboard as $dashboard1)
+	{
+		$dash_price[] = number_format($dashboard1['total_price'], 2, '.', '');
+		$a++;
+	}
+	$param = array('flag'=>$_GET['flag'],'shop'=>$_GET['shop'],'l'=>$_GET['l'],'id_order'=>$_GET['id_order']);
+
+	$current_state = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow("SELECT `current_state` from `"._DB_PREFIX_."orders` where id_order=".$id_order);
+	
+	$order_info = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'order_detail` od JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = od.product_id) JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop) join `'._DB_PREFIX_.'marketplace_shop_product` msp ON (msp.`id_product`=p.`id_product`) WHERE od.`id_order` = '.$id_order);
+
+	$retorno = array();
+	$retorno['detail_order'] = $order_info;
+	$retorno['order_info'] = $dashboard;
+	//$retorno['precios'] = $dash_price;
+	$retorno['dashboard_state'] = $dashboard_state;
+
+	//echo json_encode($retorno);
+	?>
+<table width="100%" class="table">
+  <tr>
+    <td>
+      <h4>Detalle cliente</h4>
+      Nombre : <?php echo $dashboard[0]['name']; ?><br/>
+      Dirección : <?php echo $dashboard[0]['address1']." ".$dashboard[0]['address2']; ?><br/>
+      Codigo Postal : <?php echo $dashboard[0]['postcode']; ?><br/>
+      Ciudad : <?php echo $dashboard[0]['city']; ?><br/>
+      Estado : <?php echo $dashboard_state; ?><br/>
+      Pais : <?php echo $dashboard[0]['country']; ?><br/>
+      Telefono contacto : <?php echo $dashboard[0]['mobile']; ?>
+    </td>
+    <td>
+      <h4>Orden</h4>
+      Estatus Orden : <?php echo getRealStatus ($dashboard[0]['order_status']); ?><br/>
+      Dirección envio : <?php echo $dashboard[0]['address1']; ?><br/>
+      Codigo Postal : <?php echo $dashboard[0]['postcode']; ?><br/>
+      Ciudad : <?php echo $dashboard[0]['city']; ?><br/>
+      Estado : <?php echo $dashboard[0]['state']; ?><br/>
+      Pais : <?php echo $dashboard[0]['country']; ?><br/>
+      Metodo de pago : <?php echo $dashboard[0]['payment_mode']; ?>    
+    </td>
+  </tr>
+</table>
+<table width="100%" class="table">
+  	<tr>
+   		<th>Producto</th>
+   		<th>Cantidad</th>
+   		<th>Precio</th>
+  	</tr>
+<?php foreach ($order_info as $ord_info) {?>
+	<tr>
+			<td><?php echo $ord_info['product_name']; ?></td>
+			<td><?php echo $ord_info['product_quantity']; ?></div>
+			<td><?php echo number_format($ord_info['total_price_tax_incl'],2,'.',','); ?></div>
+	</tr>
+<?php } ?>
+</table>

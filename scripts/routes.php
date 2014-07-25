@@ -25,6 +25,9 @@ switch($nav){
 	case 'store' :
 		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/modificar_tienda.php";
 	break;
+	case 'configuracion' :
+		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/configuracion.php";
+	break;
 	default:
 		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/logueate.php";
 	break;

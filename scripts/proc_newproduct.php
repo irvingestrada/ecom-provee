@@ -21,6 +21,12 @@
 		$product_category = Tools::getValue('product_category');
 		$product_size = Tools::getValue('product_size');
 
+		$product_size_chica = Tools::getValue('chk-size-chica');
+		$product_size_mediana = Tools::getValue('chk-size-mediana');
+		$product_size_grande = Tools::getValue('chk-size-grande');
+
+
+
 		if ($product_name==""){
 			header("location: /index.php?nav=newproduct&error_msg=prod_name");
 			exit;
@@ -162,6 +168,88 @@
 					$mps_product_obj->id_product = $ps_product_id;
 					$mps_product_obj->active = $active;
 					$mps_product_obj->add();
+
+					//aqui mero las cantidades indivuales por talla
+					if ($product_size_chica){
+ 						
+						$result  = Db::getInstance()->insert('product_attribute', array(
+				            'id_product' => pSQL($ps_product_id),
+				            'quantity' => pSQL($product_size_chica),
+				            'minimal_quantity' => 1,
+				        ));
+						if($result) {
+							$id_product_attribute_combination_chica = Db::getInstance()->Insert_ID();
+							$result  = Db::getInstance()->insert('product_attribute_combination', array(
+						        'id_attribute' => pSQL(1),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_chica),
+						    ));
+						    $result  = Db::getInstance()->insert('product_attribute_shop', array(
+						        'id_shop' => pSQL(1),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_chica),
+						        'minimal_quantity' => pSQL(1), 
+						    ));
+						    $result  = Db::getInstance()->insert('stock_available', array(
+						        'id_product' => pSQL($ps_product_id),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_chica),
+						        'id_shop' => pSQL(1),
+						        'quantity' => pSQL($product_size_chica),
+						    ));
+							
+						}
+					}
+					if ($product_size_mediana){
+						$result  = Db::getInstance()->insert('product_attribute', array(
+				            'id_product' => pSQL($ps_product_id),
+				            'quantity' => pSQL($product_size_mediana),
+				            'minimal_quantity' => 1,
+				        ));
+						
+						if($result) {
+							$id_product_attribute_combination_mediana = Db::getInstance()->Insert_ID();
+							$result  = Db::getInstance()->insert('product_attribute_combination', array(
+						        'id_attribute' => pSQL(2),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_mediana),
+						    ));
+							$result  = Db::getInstance()->insert('product_attribute_shop', array(
+						        'id_shop' => pSQL(1),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_mediana),
+						        'minimal_quantity' => pSQL(1), 
+						    ));
+						    $result  = Db::getInstance()->insert('stock_available', array(
+						        'id_product' => pSQL($ps_product_id),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_mediana),
+						        'id_shop' => pSQL(1),
+						        'quantity' => pSQL($product_size_mediana),
+						    ));
+						}
+					}
+					if ($product_size_grande){
+						$result  = Db::getInstance()->insert('product_attribute', array(
+				            'id_product' => pSQL($ps_product_id),
+				            'quantity' => pSQL($product_size_grande),
+				            'minimal_quantity' => 1,
+				        ));
+						
+						if($result) {
+							$id_product_attribute_combination_grande = Db::getInstance()->Insert_ID();
+							$result  = Db::getInstance()->insert('product_attribute_combination', array(
+						        'id_attribute' => pSQL(3),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_grande),
+						    ));
+							$result  = Db::getInstance()->insert('product_attribute_shop', array(
+						        'id_shop' => pSQL(1),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_grande),
+						        'minimal_quantity' => pSQL(1), 
+						    ));
+						    $result  = Db::getInstance()->insert('stock_available', array(
+						        'id_product' => pSQL($ps_product_id),
+						        'id_product_attribute' => pSQL($id_product_attribute_combination_grande),
+						        'id_shop' => pSQL(1),
+						        'quantity' => pSQL($product_size_grande),
+						    ));
+						}
+					}
+					
 				}
 			}
 					

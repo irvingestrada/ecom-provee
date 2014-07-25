@@ -89,27 +89,90 @@
   <div class="form-group">
     <label for="product_quantity" class="col-sm-2 control-label">Cantidad:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="product_quantity" name="product_quantity" placeholder="Cantidad" value="<?php echo $pro_info["quantity"]; ?>">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="product_size" class="col-sm-2 control-label">Talla:</label>
-    <div class="col-sm-10">
-		<select id="product_size" name="product_size" style="width:20%;">
-			<option value="0">Sin Talla</option>
-			<option value="1">Chica</option>
-			<option value="2">Mediana</option>
-			<option value="3">Grande</option>
-		</select>
+      <input type="number" class="form-control" id="product_quantity" name="product_quantity" placeholder="" value="<?php echo $pro_info["quantity"]; ?>" onkeypress="fKeyPress(event,'N');" required pattern="[0-9]*">
     </div>
   </div>
 
   <?php
+
   	$obj_mp_shopproduct = new MarketplaceShopProduct();
   	$id_product_info = $obj_mp_shopproduct->findMainProductIdByMppId($_POST["form_product_id"]);
   	$id_product = $id_product_info['id_product'];
   	$product = new Product($id_product);
 
+
+	$attributes = $product->getAttributesResume(2);
+	if (empty($attributes))
+		$attributes[] = array(
+			'id_product_attribute' => 0,
+			'attribute_designation' => ''
+		);
+	
+	// Get available quantities
+	$available_quantity = array();
+	$product_designation = array();
+	$arreglo_tallas = array();
+	foreach ($attributes as $attribute)
+	{
+
+		$available_quantity[$attribute['id_product_attribute']] = StockAvailable::getQuantityAvailableByProduct((int)$product->id,
+																												$attribute['id_product_attribute']);
+
+		if ($attribute['attribute_designation']=='Size - S'){
+			$arreglo_tallas['S'] = array('id' => $attribute['id_product_attribute'], 'cantidad' => $available_quantity[$attribute['id_product_attribute']]);
+		}else if ($attribute['attribute_designation']=='Size - M'){
+			$arreglo_tallas['M'] = array('id' => $attribute['id_product_attribute'], 'cantidad' => $available_quantity[$attribute['id_product_attribute']]);
+		}else if ($attribute['attribute_designation']=='Size - L'){
+			$arreglo_tallas['L'] = array('id' => $attribute['id_product_attribute'], 'cantidad' => $available_quantity[$attribute['id_product_attribute']]);
+		}
+		// Get available quantity for the current product attribute in the current shop
+		
+		// Get all product designation
+		$product_designation[$attribute['id_product_attribute']] = rtrim(
+			$product->name[2].' - '.$attribute['attribute_designation'],
+			' - '
+		);
+	}
+	//var_dump($arreglo_tallas);
+  ?>
+  <input type="hidden" value="<?php echo (count($arreglo_tallas)==0) ? '4' : '-1'; ?>" name="product_size_selected" id="product_size_selected" >
+  <input type="hidden" name="vsize-chica" id="vsize-chica" value="<?php echo ($arreglo_tallas['S']['id']) ? $arreglo_tallas['S']['id'] : '' ?>">
+  <input type="hidden" name="vsize-mediana" id="vsize-mediana" value="<?php echo ($arreglo_tallas['M']['id']) ? $arreglo_tallas['M']['id'] : '' ?>">
+  <input type="hidden" name="vsize-grande" id="vsize-grande" value="<?php echo ($arreglo_tallas['L']['id']) ? $arreglo_tallas['L']['id'] : '' ?>">
+  <div class="form-group">
+    <label for="product_size" class="col-sm-2 control-label">Talla:</label>
+    <div class="col-sm-10">
+		<select id="product_size" name="product_size" style="width:20%;" onchange="fnChangeTallaSelect(this);">
+			<option value="0">Seleccionar</option>
+			<option value="4" <?php echo (count($arreglo_tallas)==0) ? 'selected' : ''; ?>>Unitalla</option>
+			<option value="-1" <?php echo (count($arreglo_tallas)>=1) ? 'selected' : ''; ?>>Especificar</option>
+		</select>
+    </div>
+  </div>
+  <div class="form-group" style="display:none;" id="form-tallas-group">
+    <div class="col-sm-5" >
+    	<table class="table" style="margin-left:140px;">
+    	<tr>
+    		<th>Talla</th>
+    		<th>Cantidad</th>
+    	</tr>
+    	<tr>
+    		<td><input type="checkbox" name="size-chica" id="size-chica" value="<?php echo ($arreglo_tallas['S']['id']) ? $arreglo_tallas['S']['id'] : '' ?>"> Chica</td>
+    		<td><input type="number" class="form-control" id="chk-size-chica" name="chk-size-chica" placeholder="" value="<?php echo ($arreglo_tallas['S']['cantidad']) ? $arreglo_tallas['S']['cantidad'] : '' ?>" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
+    	</tr>
+    	<tr>
+    		<td><input type="checkbox" name="size-mediana" id="size-mediana" value="<?php echo ($arreglo_tallas['M']['cantidad']) ? $arreglo_tallas['M']['cantidad'] : '' ?>"> Mediana</td>
+    		<td><input type="number" class="form-control" id="chk-size-mediana" name="chk-size-mediana" placeholder="" value="<?php echo ($arreglo_tallas['M']['cantidad']) ? $arreglo_tallas['M']['cantidad'] : '' ?>" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
+    	</tr>
+    	<tr>
+    		<td><input type="checkbox" name="size-grande" id="size-grande" value="<?php echo ($arreglo_tallas['L']['cantidad']) ? $arreglo_tallas['L']['cantidad'] : '' ?>"> Grande</td>
+    		<td><input type="number" class="form-control" id="chk-size-grande" name="chk-size-grande" placeholder="" value="<?php echo ($arreglo_tallas['L']['cantidad']) ? $arreglo_tallas['L']['cantidad'] : '' ?>" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
+    	</tr>
+    	</table>
+    </div>
+  </div>
+  <?php
+  	
 	$id_image_detail = $product->getImages($id_lang);
 	
 	$product_link_rewrite = Db::getInstance()->getRow("select * from `". _DB_PREFIX_."product_lang` where `id_product`=".$id_product." and `id_lang`=1");
@@ -145,11 +208,137 @@
   	}
   	echo '</div>';	
   	echo '</div>';
-  ?>
 
+
+
+  ?>
+  <div class="form-group">
+  	<label for="product_size" class="col-sm-2 control-label">Imagenes:</label>
+  	<div class="col-sm-10">
+		<button class="btn btn-warning btn-large fileSelect" name="product_image" style="	">Subir Imagen</button>
+		
+		<a href="javascript:;" onclick="showOtherImage();">
+		<button class="btn btn-warning btn-large fileSelect"><i class="icon-white icon-heart"></i> Agregar otra imagen</button>
+		</a>
+		<div id="otherimages" style="margin-left:0px;"> </div>
+	</div>
+
+	<div id="preview-images" >
+	</div>
+
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+    	<input type="file" id="product_image" name="product_image" value="" class="account_input" size="chars" style="display:none;"  />
+    </div>
+  </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button type="submit" class="btn btn-default">Actualizar</button>
     </div>
   </div>
 </form>	
+<script type="text/javascript">
+function fnChangeTallaSelect(evento){
+	if (evento.value==-1){
+		$("#form-tallas-group").show();
+		$("#chk-size-chica").focus();
+	}else{
+		$("#form-tallas-group").hide();
+		$("#product_quantity").focus();
+	}
+}
+
+</script>
+<script language="javascript" type="text/javascript">
+
+document.querySelector('.fileSelect').addEventListener('click', function(e) {
+	e.preventDefault();
+  	// Use the native click() of the file input.
+  	document.querySelector('#product_image').click();
+}, false);
+
+	var contador_oficial_imagenes=1+<?php echo $i; ?>;
+
+function showOtherImage() {
+	if (contador_oficial_imagenes==3){
+		alert("Máximo 3 imagenes por producto");
+		return false;
+	}	
+	var newdiv = document.createElement('div');
+
+	newdiv.setAttribute("id","childDiv"+contador_oficial_imagenes);
+
+	newdiv.innerHTML = "&nbsp;<input type='file' id='images"+contador_oficial_imagenes+"' name='images[]'  class='btn btn-warning btn-large fileSelect' />&nbsp;&nbsp;<a class='btn btn-warning btn-large fileSelect' href=\"javascript:;\" onclick=\"removeEvent('childDiv"+contador_oficial_imagenes+"')\">Quitar</a>";
+
+	var ni = document.getElementById('otherimages');
+
+	ni.appendChild(newdiv);
+
+	contador_oficial_imagenes++;
+
+} 
+
+
+function removeEvent(divNum){
+
+	var d = document.getElementById('otherimages');
+
+	var olddiv = document.getElementById(divNum);
+
+	d.removeChild(olddiv);
+
+	contador_oficial_imagenes--;
+
+} 
+
+function fKeyPress(e,tipo){
+	//FUNCION PARA VALIDAR CAMPOS
+	var evt = (e) ? e : event
+	var dKey = (evt.which) ? evt.which : evt.keyCode;
+	if(dKey==13) return;
+
+	switch(tipo){
+		case "NP": //Numeros - Acepta �nicamente numeros
+			var arreglo="0123456789.";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "N": //Numeros - Acepta �nicamente numeros
+			var arreglo="0123456789";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "F": //Fecha - Acepta �nicamente numeros y Diagonal
+			var arreglo="0123456789/";
+			if(dKey==8)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "A": //Alfanumerico - Acepta alfanumerico
+			var arreglo='ABCDEFGHIJGKLMN�OPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz0123456789 ';
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "S": //Alfabetico - Acepta letras y signos especificos
+			var arreglo="A�BCDE�FGHI�JGKLMN�O�PQRSTU�VWXYZa�bcde�fghi�jklmn�o�pqrstu�vwxyz,.-/ ";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "L": //ABC - Acepta �nicamente letras y espacio
+			var arreglo="ABCDEFGHIJGKLMN�OPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz ";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "R": //Alfabetico - Acepta letras y numeros
+			var arreglo="ABCDEFGHIJGKLMNOPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz1234567890,.-/ ";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "D": //Alfabetico - Acepta letras y numeros
+			var arreglo=" ABCDEFGHIJGKLMNOPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz1234567890";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+	}
+
+	if (document.all) { //IE
+		if(arreglo.indexOf(String.fromCharCode(dKey),0)!=-1){ event.returnValue = true;	}
+		else{ event.returnValue = false; }
+	}else { //Mozilla
+		if(arreglo.indexOf(String.fromCharCode(dKey),0)==-1){ if (e.cancelable) { e.preventDefault(); }	}
+	}
+}
+
+</script>

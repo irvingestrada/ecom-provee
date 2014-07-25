@@ -137,36 +137,57 @@
   <div class="form-group">
     <label for="product_name" class="col-sm-2 control-label">Nombre del producto:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="product_name" name="product_name" placeholder="Nombre producto" value="<?php echo $pro_info["product_name"]; ?>" required>
+      <input type="text" class="form-control" id="product_name" name="product_name" placeholder="" value="<?php echo $pro_info["product_name"]; ?>" required>
     </div>
   </div>
   <div class="form-group">
     <label for="product_description" class="col-sm-2 control-label">Descripción del producto:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="product_description" name="product_description" placeholder="Descripción" value="<?php echo $pro_info["description"]; ?>" required>
+      <input type="text" class="form-control" id="product_description" name="product_description" placeholder="" value="<?php echo $pro_info["description"]; ?>" required>
     </div>
   </div>
   <div class="form-group">
     <label for="product_price" class="col-sm-2 control-label">Precio:</label>
     <div class="col-sm-10">
-      <input type="number" class="form-control" id="product_price" name="product_price" placeholder="Precio" value="<?php echo $pro_info["price"]; ?>" pattern="[0-9]*" onkeypress="fKeyPress(event,'NP');" required>
+      <input type="number" class="form-control" id="product_price" name="product_price" placeholder="" value="<?php echo $pro_info["price"]; ?>" pattern="[0-9]*" onkeypress="fKeyPress(event,'NP');" required>
     </div>
   </div>
   <div class="form-group">
     <label for="product_quantity" class="col-sm-2 control-label">Cantidad:</label>
     <div class="col-sm-10">
-      <input type="number" class="form-control" id="product_quantity" name="product_quantity" placeholder="Cantidad" value="<?php echo $pro_info["quantity"]; ?>" onkeypress="fKeyPress(event,'N');" required pattern="[0-9]*">
+      <input type="number" class="form-control" id="product_quantity" name="product_quantity" placeholder="" value="<?php echo $pro_info["quantity"]; ?>" onkeypress="fKeyPress(event,'N');" required pattern="[0-9]*">
     </div>
   </div>
   <div class="form-group">
     <label for="product_size" class="col-sm-2 control-label">Talla:</label>
     <div class="col-sm-10">
-		<select id="product_size" name="product_size" style="width:20%;">
-			<option value="0">Sin Talla</option>
-			<option value="1">Chica</option>
-			<option value="2">Mediana</option>
-			<option value="3">Grande</option>
+		<select id="product_size" name="product_size" style="width:20%;" onchange="fnChangeTallaSelect(this);">
+			<option value="0">Seleccionar</option>
+			<option value="4">Unitalla</option>
+			<option value="-1">Especificar</option>
 		</select>
+    </div>
+  </div>
+  <div class="form-group" style="display:none;" id="form-tallas-group">
+    <div class="col-sm-5" >
+    	<table class="table" style="margin-left:140px;">
+    	<tr>
+    		<th>Talla</th>
+    		<th>Cantidad</th>
+    	</tr>
+    	<tr>
+    		<td><input type="checkbox" name="size-chica" id="size-chica" value="1"> Chica</td>
+    		<td><input type="number" class="form-control" id="chk-size-chica" name="chk-size-chica" placeholder="" value="" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
+    	</tr>
+    	<tr>
+    		<td><input type="checkbox" name="size-mediana" id="size-mediana" value="2"> Mediana</td>
+    		<td><input type="number" class="form-control" id="chk-size-mediana" name="chk-size-mediana" placeholder="" value="" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
+    	</tr>
+    	<tr>
+    		<td><input type="checkbox" name="size-grande" id="size-grande" value="1"> Grande</td>
+    		<td><input type="number" class="form-control" id="chk-size-grande" name="chk-size-grande" placeholder="" value="" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
+    	</tr>
+    	</table>
     </div>
   </div>
   <div class="form-group">
@@ -182,7 +203,7 @@
 
 	<div id="preview-images" >
 	</div>
-	
+
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
@@ -200,6 +221,16 @@ document.querySelector('.fileSelect').addEventListener('click', function(e) {
 }, false);
 
 	var contador_oficial_imagenes=1;
+
+function fnChangeTallaSelect(evento){
+	if (evento.value==-1){
+		$("#form-tallas-group").show();
+		$("#chk-size-chica").focus();
+	}else{
+		$("#form-tallas-group").hide();
+		$("#product_quantity").focus();
+	}
+}
 
 function showOtherImage() {
 	if (contador_oficial_imagenes==3){

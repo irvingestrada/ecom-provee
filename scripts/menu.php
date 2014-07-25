@@ -1,4 +1,5 @@
 <?php
+session_start();
 if ($_SESSION['logueado']==true){ ?>
 <div class="sidebar-nav">
 <nav class="navbar navbar-inverse" role="navigation">
@@ -19,8 +20,8 @@ if ($_SESSION['logueado']==true){ ?>
       <ul class="nav navbar-nav">
         <li ><a href="/index.php?nav=store">Cambios Tienda</a></li>
         <li ><a href="/index.php?nav=productos">Mis Productos</a></li>
-        <li ><a href="/index.php?nav=Ventas">Mis Ventas</a></li>
-        <li ><a href="/index.php?nav=configuacion">Configuración</a></li>
+        <li ><a href="/index.php?nav=ventas">Mis Ventas</a></li>
+        <li ><a href="/index.php?nav=configuracion">Configuración</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

@@ -81,7 +81,6 @@ session_start();
     </div>
     <div class="container">
       <!-- Example row of columns -->
-
       <hr>
 
       <footer>
@@ -91,6 +90,7 @@ session_start();
         <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
 
         <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/bootbox.min.js"></script>
 
         <script src="js/main.js"></script>
 
@@ -104,6 +104,13 @@ session_start();
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+        <script>
+        $(document).on("click", ".alert", function(e) {
+            bootbox.alert("Hello world!", function() {
+                console.log("Alert Callback");
+            });
+        });
         </script>
     </body>
 </html>

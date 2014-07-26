@@ -134,6 +134,7 @@
 		);
 	}
 	//var_dump($arreglo_tallas);
+	$haytallas = count($arreglo_tallas);
   ?>
   <input type="hidden" value="<?php echo (count($arreglo_tallas)==0) ? '4' : '-1'; ?>" name="product_size_selected" id="product_size_selected" >
   <input type="hidden" name="vsize-chica" id="vsize-chica" value="<?php echo ($arreglo_tallas['S']['id']) ? $arreglo_tallas['S']['id'] : '' ?>">

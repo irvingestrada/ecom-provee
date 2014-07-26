@@ -36,6 +36,7 @@
 	</form>
 	<div class="container"> <?php
 	$contador = 0;
+
 	if ($productList){
 		foreach ($productList as $key) {
 			$contador++;

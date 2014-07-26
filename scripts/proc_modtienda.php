@@ -94,8 +94,6 @@
 	}
 	
 	
-	
-    
     $market_place_shop_name   = $market_place_seller_info['shop_name'];
     if ($_FILES['update_shop_logo']["size"] == 0) {
         if ($market_place_shop_name!=$shop_name) {
@@ -131,6 +129,8 @@
                 $shop_new_logo_name = $market_seller_id['marketplace_seller_id'] . "-" . $shop_name . ".jpg";
                 $manipulator->save(BAZARINGA_PATH.'modules/marketplace/img/shop_img/' . $shop_new_logo_name);
             }
+        }else{
+   
         }
     }
 
@@ -151,8 +151,7 @@
     //$obj_seller->id_category = $store_category;
     
     $obj_seller->save();
-    var_dump($obj_seller);
-	var_dump($obj_seller->save());
+    
     $is_update     = Db::getInstance()->update('marketplace_shop', array(
         'shop_name' => $shop_name,
         'about_us' => $about_us

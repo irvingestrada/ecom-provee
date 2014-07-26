@@ -43,7 +43,12 @@ $("#chk-size-grande").blur(function() {
 $("#product_size option").filter(function() {
     //may want to use $.trim in here
     if ($(this).val() == $("#product_size_selected").val()){
-    	$("#form-tallas-group").show();
+    	if ($("#product_size_selected").val()=="4"){
+    		$("#form-tallas-group").hide();
+    	}else{
+    		$("#form-tallas-group").show();	
+    	}
+    	
     }
     return $(this).val() == $("#product_size_selected").val(); 
 }).prop('selected', true);

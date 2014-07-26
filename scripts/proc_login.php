@@ -42,15 +42,13 @@
 				$obj_seller_info = new SellerInfoDetail();
 				//var_dump($authentication->id);
 				$validate_marketplace = $obj_seller_info->getMarketPlaceSellerIdByCustomerId($authentication->id);
-				//var_dump($validate_marketplace);
 				if ($validate_marketplace){
 					if ($validate_marketplace['is_seller']=="1"){
 						//asignar a sesion
 						$_SESSION['logueado'] = true;
 						$_SESSION['id_customer'] = $authentication->id;
 						$_SESSION['id_lang'] = 2;
-						$_SESSION['marketplace_seller_id'] = $validate_marketplace['id'];
-						$_SESSION['mamadas'] = "olakease";
+						$_SESSION['marketplace_seller_id'] = $validate_marketplace['marketplace_seller_id'];
 						$_SESSION['nombre_sesion'] = $customer->firstname.' '.$customer->lastname;
 
 					}else{

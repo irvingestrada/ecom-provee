@@ -12,7 +12,7 @@ $("#paquetesform").submit(function() {
 $("#conektaform").submit(function() {
 	var longitud_privada = $.trim($("#conekta_privada").val().length);
 	var longitud_publica = $.trim($("#conekta_publica").val().length);
-	console.log($("#conekta_publica").val().length);
+
 	if ($("#conekta_privada").val()=="" || $("#conekta_publica").val()=="" || $("#conekta_privada").val().length!=20 || $("#conekta_publica").val().length!=20){
 		bootbox.alert("La informacion proporcionada no es correcta, favor de verificar.", function() { 
 			if (longitud_privada!=20){
@@ -24,7 +24,6 @@ $("#conektaform").submit(function() {
 		});
 		return false;
 	}else{
-		console.log($("#conekta_privada").val().substring(4));
 		if ($("#conekta_privada").val().substring(0,4)!="key_"){
 			bootbox.alert("La llave privada no tiene el formato correcto", function() { 
 				$("#conekta_privada").focus();			

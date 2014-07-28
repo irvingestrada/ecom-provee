@@ -4,6 +4,8 @@
 	$categoria = new Category($market_place_seller_info["id_category"]);
 
 	$pay_mode = Db::getInstance()->ExecuteS("SELECT * from `"._DB_PREFIX_."marketplace_payment_mode`");
+
+	$pagos = Db::getInstance()->ExecuteS("SELECT * from `"._DB_PREFIX_."marketplace_pagos_proveedor` where id_seller =" . $market_seller_id['marketplace_seller_id']);
 	
 	$obj_seller = new SellerInfoDetail($market_seller_id['marketplace_seller_id']);
 
@@ -106,32 +108,17 @@
   </div>
   
   <div class="tab-pane" id="orders">
-  	<form class="form-horizontal" role="form" action="/scripts/proc_modseo.php" method="post" enctype="multipart/form-data">
-	  <div class="form-group">
-	    <label for="update_meta_title" class="col-sm-2 control-label">Meta-titulo:</label>
-	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="update_meta_title" name="update_meta_title" placeholder="" value="<?php echo $marketplace_seller_info["shop_name"]; ?>" required>
-	    </div>
-	  </div>
-	  <div class="form-group">
-	    <label for="update_meta_description" class="col-sm-2 control-label">Meta description:</label>
-	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="update_meta_description" name="update_meta_description" placeholder="" value="<?php echo $marketplace_seller_info["about_shop"]; ?>" required>
-	    </div>
-	  </div>
-	  <div class="form-group">
-	    <label for="update_meta_keywords" class="col-sm-2 control-label">Meta palabras clave:</label>
-	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="update_meta_keywords" name="update_meta_keywords" placeholder="" value="<?php echo $marketplace_seller_info["seller_name"]; ?>" required>
-	    </div>
-	  </div>
-	  
-	  <div class="form-group">
-	    <div class="col-sm-offset-2 col-sm-10">
-	      	<button type="submit" class="btn btn-default center">Actualizar</button>
-	    </div>
-	  </div>
-	</form>
+  		<table class="table">	
+	  	<thead>
+	    	<tr>
+	      		<th class="col-md-3">#Pago</th>
+	      		<th class="col-md-3">Fecha</th>
+	      		<th class="col-md-3">Concepto</th>
+	      		<th class="col-md-3">Monto</th>
+	    	</tr>
+	  	</thead>
+	  	<tbody>
+		</table>
   </div>
 
   <div class="tab-pane" id="cerrar">

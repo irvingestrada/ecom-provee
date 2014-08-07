@@ -25,6 +25,9 @@
 		$product_size_mediana = Tools::getValue('chk-size-mediana');
 		$product_size_grande = Tools::getValue('chk-size-grande');
 
+		$product_costo_envio = Tools::getValue('product_costo_envio');
+
+
 
 
 		if ($product_name==""){
@@ -51,7 +54,8 @@
 			header("location: /index.php?nav=newproduct&error_msg=prod_size");
 			exit;
 		}
-
+		
+		
 		$obj_seller_info_detail = new SellerInfoDetail();
 
 		$buscando_categoria = $obj_seller_info_detail->sellerDetail($id_seller);
@@ -68,6 +72,8 @@
 		$obj_seller_product->id_category = $buscando_categoria['id_category'];
 		$obj_seller_product->ps_id_shop = $context->shop->id;
 		$obj_seller_product->id_shop = $mp_id_shop;
+		$obj_seller_product->costo_envio = $product_costo_envio;
+		
 
 		$obj_seller_product->active = 1;
 		
@@ -81,71 +87,85 @@
 		$obj_seller_product_category->id_category = $buscando_categoria['id_category'];
 		$obj_seller_product_category->add();
 		$i=0;
-		/*	
-		foreach($product_category as $p_category){
-			$obj_seller_product_category->id_category = $p_category;
-			if($i != 0)
-				$obj_seller_product_category->is_default = 0;
-			$obj_seller_product_category->add();
-			$i++;
-		}*/
 		
 		$address    = BAZARINGA_PATH."modules/marketplace/img/product_img/";
 		
-		if(isset($_FILES["product_image"])) {
-			if($_FILES["product_image"]['size']>0) {
+		if(isset($_POST["image-1"]) && strlen($_POST["image-1"])>0) {
+			$file_exists = $_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-1"];
+			if (file_exists($file_exists)){
 				$length     = 6;
 				$characters = "0123456789abcdefghijklmnopqrstuvwxyz";
 				$u_id       = "";
 				for ($p = 0; $p < $length; $p++) {
 					$u_id .= $characters[mt_rand(0, strlen($characters))];
 				}
-				
-				$result1    = Db::getInstance()->insert('marketplace_product_image', 
-										array(
-												'seller_product_id' => (int) $seller_product_id,
-												'seller_product_image_id' => pSQL($u_id)
-										));
 
-				//var_dump( array( 'seller_product_id' => (int) $seller_product_id, 'seller_product_image_id' => pSQL($u_id) ));
+				$result1    = Db::getInstance()->insert('marketplace_product_image', 
+							array(
+									'seller_product_id' => (int) $seller_product_id,
+									'seller_product_image_id' => pSQL($u_id),
+									'position' => 0
+							));
+				echo 'seller_product_id = (int) '.$seller_product_id.' seller_product_image_id = '.$u_id.' position = '.$position;
 				$image_name = $u_id . ".jpg";
-				//var_dump($_FILES["product_image"]["tmp_name"]);
-				//var_dump($address);
-				//var_dump($image_name);
-				move_uploaded_file($_FILES["product_image"]["tmp_name"], $address . $image_name);
+				//$movido = move_uploaded_file($file_exists, $address . $image_name);
+				var_dump($address . $image_name);
+				echo " vs ";
+				var_dump($file_exists);
+				rename ($file_exists, $address . $image_name);
+				if (file_exists($address . $image_name)){
+					echo "ya la hicimos";
+				}else{
+					echo "valio maiz";
+				}
+			}else{
+				echo "valio madres 2";
 			}
 		}
-					
-		if (isset($_FILES['images'])) {
-			$other_images = $_FILES["images"]['tmp_name'];
-			$count = count($other_images);
-		} else {
-			$count = 0;
-		}
-		
-		
-		for ($i = 0; $i < $count; $i++) {
-			$length     = 6;
-			$characters = "0123456789abcdefghijklmnopqrstuvwxyz";
-			$u_other_id = "";
-			for ($p = 0; $p < $length; $p++) {
-				$u_other_id .= $characters[mt_rand(0, strlen($characters))];
+
+		if(isset($_POST["image-2"]) && strlen($_POST["image-2"])>0) {
+			$file_exists = urldecode($_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-2"]);
+			if (file_exists($file_exists)){
+				$length     = 6;
+				$characters = "0123456789abcdefghijklmnopqrstuvwxyz";
+				$u_other_id = "";
+				for ($p = 0; $p < $length; $p++) {
+					$u_other_id .= $characters[mt_rand(0, strlen($characters))];
+				}
+				$result2    = Db::getInstance()->insert('marketplace_product_image', array(
+					'seller_product_id' => (int) $seller_product_id,
+					'seller_product_image_id' => pSQL($u_other_id),
+					'position' => 1
+				));
+				$image_name = $u_other_id . ".jpg";
+				$address    = BAZARINGA_PATH."modules/marketplace/img/product_img/";
+				
+				//move_uploaded_file($file_exists, $address . $image_name);
+				rename ($file_exists, $address . $image_name);
 			}
-			$result2    = Db::getInstance()->insert('marketplace_product_image', array(
-				'seller_product_id' => (int) $seller_product_id,
-				'seller_product_image_id' => pSQL($u_other_id)
-			));
-			//var_dump( array( 'seller_product_id' => (int) $seller_product_id, 'seller_product_image_id' => pSQL($u_other_id) ));
-			
-			$image_name = $u_other_id . ".jpg";
-			$address    = BAZARINGA_PATH."modules/marketplace/img/product_img/";
-			
-			//echo "<br/>segunda parte<br/>";
-			//var_dump($other_images);
-			//var_dump($address);
-			//var_dump($image_name);
-			
-			move_uploaded_file($other_images[$i], $address . $image_name);
+		}
+
+		if(isset($_POST["image-3"])  && strlen($_POST["image-3"])>0) {
+			$file_exists = urldecode($_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-3"]);
+			if (file_exists($file_exists)){
+				$length     = 6;
+				$characters = "0123456789abcdefghijklmnopqrstuvwxyz";
+				$u_other_id = "";
+				for ($p = 0; $p < $length; $p++) {
+					$u_other_id .= $characters[mt_rand(0, strlen($characters))];
+				}
+				$result2    = Db::getInstance()->insert('marketplace_product_image', array(
+					'seller_product_id' => (int) $seller_product_id,
+					'seller_product_image_id' => pSQL($u_other_id),
+					'position' => 2
+				));
+				$image_name = $u_other_id . ".jpg";
+				$address    = BAZARINGA_PATH."modules/marketplace/img/product_img/";
+				
+				//move_uploaded_file($file_exists, $address . $image_name);
+				rename ($file_exists, $address . $image_name);
+			}
+
 		}
 		
 		$active = "1";
@@ -169,6 +189,8 @@
 					$mps_product_obj->active = $active;
 					$mps_product_obj->add();
 
+					Product::cleanPositions($ps_product_id);
+					/*
 					//aqui mero las cantidades indivuales por talla
 					if ($product_size_chica){
  						
@@ -248,7 +270,7 @@
 						        'quantity' => pSQL($product_size_grande),
 						    ));
 						}
-					}
+					}*/
 					
 				}
 			}

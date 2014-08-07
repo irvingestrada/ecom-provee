@@ -1,54 +1,61 @@
+reload_image($("#id_product_gallery").val());
 
 $("#product_size").val($("#product_current_size").val());
 
-$("#chk-size-chica").blur(function() {
-	if ($("#chk-size-chica").val()>=1){
-		$("#size-chica").attr("checked","checked");
-	}else{
-		$("#size-chica").removeAttr( "checked" );
-	}
-	var s = ($("#chk-size-chica").val() >=1) ? $("#chk-size-chica").val() : 0;	
-	var m = ($("#chk-size-mediana").val() >= 1) ? $("#chk-size-mediana").val() : 0;	
-	var l = ($("#chk-size-grande").val() >=1) ? $("#chk-size-grande").val() : 0;
-	var total = parseInt(s) + parseInt(m) + parseInt(l);
-	$("#product_quantity").val(total);
-});
+	
+function fnChangeCoverImage(id_product,id_image){
+     $.ajax({
+            type: 'POST',
+            url:    '/scripts/changecover.php',
+            async: true,
+            data: 'id_product=' + id_product + '&id_image='+id_image,
+            cache: false,
+            success: function(data)
+            {
+                bootbox.alert("Portada de producto actualizada", function() { 
+                    reload_image($("#id_product_gallery").val());
+                });
+                
+            }
+        });
+}
 
-$("#chk-size-mediana").blur(function() {
-	if ($("#chk-size-mediana").val()>=1){
-		$("#size-mediana").attr("checked","checked");
-	}else{
-		$("#size-mediana").removeAttr( "checked" );
-	}
-	var s = $("#chk-size-chica").val() > 1 ? $("#chk-size-chica").val() : 0;	
-	var m = $("#chk-size-mediana").val() > 1 ? $("#chk-size-mediana").val() : 0;	
-	var l = $("#chk-size-grande").val() > 1 ? $("#chk-size-grande").val() : 0;
-	var total = parseInt(s) + parseInt(m) + parseInt(l);
-	$("#product_quantity").val(total);
-});
 
-$("#chk-size-grande").blur(function() {
-	if ($("#chk-size-grande").val()>=1){
-		$("#size-grande").attr("checked","checked");
-	}else{
-		$("#size-grande").removeAttr( "checked" );
-	}
-	var s = $("#chk-size-chica").val() > 1 ? $("#chk-size-chica").val() : 0;	
-	var m = $("#chk-size-mediana").val() > 1 ? $("#chk-size-mediana").val() : 0;	
-	var l = $("#chk-size-grande").val() > 1 ? $("#chk-size-grande").val() : 0;
-	var total = parseInt(s) + parseInt(m) + parseInt(l);
-	$("#product_quantity").val(total);
-});
+function deleteImageGallery(id_product, id_image){
+    bootbox.confirm("¿Deseas borrar la imagen?", function(result) {
+        if (result){
+        
+            $.ajax({
+                type: 'POST',
+                url:    '/scripts/deleteproductimage.php',
+                async: true,
+                data: 'id_image=' + id_image + '&id_pro=' + id_product,
+                cache: false,
+                success: function(data)
+                {
+                    reload_image(id_product);
+                }
+            });
+        }
+    });
+} 
 
-$("#product_size option").filter(function() {
-    //may want to use $.trim in here
-    if ($(this).val() == $("#product_size_selected").val()){
-    	if ($("#product_size_selected").val()=="4"){
-    		$("#form-tallas-group").hide();
-    	}else{
-    		$("#form-tallas-group").show();	
-    	}
-    	
-    }
-    return $(this).val() == $("#product_size_selected").val(); 
-}).prop('selected', true);
+function reload_image(id_product){
+    $.ajax({
+            type: 'POST',
+            url:    '/scripts/reloadimages.php',
+            async: false,
+            data: 'id_product=' + id_product ,
+            cache: false,
+            success: function(data)
+            {
+                $("#imagenes_tabla").html(data);
+            }
+        });
+    $.getScript( "/js/reload_uploader_config.js" )
+      .done(function( script, textStatus ) {
+      })
+      .fail(function( jqxhr, settings, exception ) {
+    });
+
+}

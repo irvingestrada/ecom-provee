@@ -3,6 +3,15 @@
 	//var_dump($_POST);
 	//var_dump($_REQUEST);
 	//var_dump($_GET);
+	$obj_seller = new SellerInfoDetail($_SESSION["marketplace_seller_id"]);
+	$pay_mode = Db::getInstance()->ExecuteS("SELECT * from `"._DB_PREFIX_."marketplace_payment_mode` where id = ".$obj_seller->paquete_comprado);
+	$tope_articulos = $pay_mode[0]["paquete_cantidad"];
+	$obj_mp_seller_product = new SellerProductDetail();
+	$productList = $obj_mp_seller_product->getProductList($_SESSION["marketplace_seller_id"],$orderby,$orderway,1, 300);
+
+	if ((count($productList)+1)>$tope_articulos){
+		header("location: /index.php?nav=productos&error_msg=maximo_productos_publicados");
+	}
 
 	$obj_marketplace_product = new SellerProductDetail();
 	$pro_info = $obj_marketplace_product->getMarketPlaceProductInfo($_POST["form_product_id"]);
@@ -33,8 +42,8 @@
 	$exclude = array();
 	array_push($exclude, 0);
 	
-	loadjs('js/editproduct.js');
-	loadjs('js/uploader_preview.js');
+	loadjs('js/newproduct.js');
+	//loadjs('js/uploader_preview.js');
 
 	foreach($category as $cat) {
 		$goOn = 1;             
@@ -71,42 +80,9 @@
 	}
 ?>
 <style>
-	#product_image
-	{
-	  visibility: hidden;
-	  width: 0;
-	  height: 0;
+	span .text-danger{
+		width: 100px !important;
 	}
-	.fileSelect
-	{
-		/*
-	  -moz-border-bottom-colors: none;
-	    -moz-border-left-colors: none;
-	    -moz-border-right-colors: none;
-	    -moz-border-top-colors: none;
-		background: none repeat scroll 0 0 #FFCC00;
-	    border-color: #FFCC00 #FFCC00 #9F9F9F;
-	    border-image: none;
-	    border-radius: 2px 2px 2px 2px;
-	    border-style: solid;
-	    border-width: 1px;
-	    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-	    color: #08233E;
-	    cursor: pointer;
-	    padding: 4px;
-	    text-shadow: 0 1px #FFFFFF;
-	    */
-	}
-	.fileSelect:hover:before {
-	  /*border-color: black;*/
-	}
-	.fileSelect:active:before {
-	  /*background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);*/
-	}
-	.list_content li span a {
-	    color: #000000 !important;
-	}
-
 </style>
 <?php 
    if (isset($_REQUEST["error_msg"])){
@@ -143,7 +119,7 @@
   <div class="form-group">
     <label for="product_description" class="col-sm-2 control-label">Descripción del producto:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="product_description" name="product_description" placeholder="" value="<?php echo $pro_info["description"]; ?>" required>
+      <textarea class="form-control" id="product_description" name="product_description"><?php echo $pro_info["description"]; ?></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -159,6 +135,13 @@
     </div>
   </div>
   <div class="form-group">
+    <label for="product_costo_envio" class="col-sm-2 control-label">Costo de envio:</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" id="product_costo_envio" name="product_costo_envio" placeholder="" value="<?php echo $pro_info["costo_envio"]; ?>" onkeypress="fKeyPress(event,'N');" required pattern="[0-9]*">
+    </div>
+  </div>
+  <!--
+  <div class="form-group">
     <label for="product_size" class="col-sm-2 control-label">Talla:</label>
     <div class="col-sm-10">
 		<select id="product_size" name="product_size" style="width:20%;" onchange="fnChangeTallaSelect(this);">
@@ -167,102 +150,54 @@
 			<option value="-1">Especificar</option>
 		</select>
     </div>
-  </div>
-  <div class="form-group" style="display:none;" id="form-tallas-group">
-    <div class="col-sm-5" >
-    	<table class="table" style="margin-left:140px;">
-    	<tr>
-    		<th>Talla</th>
-    		<th>Cantidad</th>
-    	</tr>
-    	<tr>
-    		<td><input type="checkbox" name="size-chica" id="size-chica" value="1"> Chica</td>
-    		<td><input type="number" class="form-control" id="chk-size-chica" name="chk-size-chica" placeholder="" value="" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
-    	</tr>
-    	<tr>
-    		<td><input type="checkbox" name="size-mediana" id="size-mediana" value="2"> Mediana</td>
-    		<td><input type="number" class="form-control" id="chk-size-mediana" name="chk-size-mediana" placeholder="" value="" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
-    	</tr>
-    	<tr>
-    		<td><input type="checkbox" name="size-grande" id="size-grande" value="1"> Grande</td>
-    		<td><input type="number" class="form-control" id="chk-size-grande" name="chk-size-grande" placeholder="" value="" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
-    	</tr>
-    	</table>
-    </div>
-  </div>
+  </div>-->
+  <input type="hidden" name="product_size" id="product_size" value="4" >
+  
   <div class="form-group">
-  	<label for="product_size" class="col-sm-2 control-label">Imagenes:</label>
-  	<div class="col-sm-10">
-		<button class="btn btn-warning btn-large fileSelect" name="product_image" style="	">Subir Imagen</button>
-		
-		<a href="javascript:;" onclick="showOtherImage();">
-		<button class="btn btn-warning btn-large fileSelect"><i class="icon-white icon-heart"></i> Agregar otra imagen</button>
-		</a>
-		<div id="otherimages" style="margin-left:0px;"> </div>
-	</div>
-
-	<div id="preview-images" >
-	</div>
-
+  
   </div>
+<table class="table">
+<tr>
+	<td style="padding-left:80px;width:33%;">
+		<span class="btn btn-success fileinput-button">
+        	<i class="glyphicon glyphicon-plus"></i>
+        	<span>Imagen 1</span>
+        	<input id="fileupload-1" type="file" name="files">
+        	<input type="hidden" name="image-1" id="image-1" value="">
+    	</span>
+	</td>
+	<td style="width:33%;">
+		<span class="btn btn-success fileinput-button">
+        	<i class="glyphicon glyphicon-plus"></i>
+        	<span>Imagen 2</span>
+        	<input id="fileupload-2" type="file" name="files">
+        	<input type="hidden" name="image-2" id="image-2" value="">
+    	</span>
+	</td>
+	<td style="width:33%;">
+		<span class="btn btn-success fileinput-button">
+        	<i class="glyphicon glyphicon-plus"></i>
+        	<span>Imagen 3</span>
+        	<input id="fileupload-3" type="file" name="files">
+        	<input type="hidden" name="image-3" id="image-3" value="">
+    	</span>
+	</td>
+</tr>
+<tr>
+	<td style="padding-left:80px;"><div id="file-1" class="files"></div></td>
+	<td><div id="file-2" class="files"></div></td>
+	<td><div id="file-3" class="files"></div></td>
+</tr>
+</table>
+  	
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-    	<input type="file" id="product_image" name="product_image" value="" class="account_input"   size="chars"  />
+    	
       	<button type="submit" class="btn btn-default">Dar de alta</button>
     </div>
   </div>
 </form>	
 <script language="javascript" type="text/javascript">
-
-document.querySelector('.fileSelect').addEventListener('click', function(e) {
-	e.preventDefault();
-  	// Use the native click() of the file input.
-  	document.querySelector('#product_image').click();
-}, false);
-
-	var contador_oficial_imagenes=1;
-
-function fnChangeTallaSelect(evento){
-	if (evento.value==-1){
-		$("#form-tallas-group").show();
-		$("#chk-size-chica").focus();
-	}else{
-		$("#form-tallas-group").hide();
-		$("#product_quantity").focus();
-	}
-}
-
-function showOtherImage() {
-	if (contador_oficial_imagenes==3){
-		alert("Máximo 3 imagenes por producto");
-		return false;
-	}	
-	var newdiv = document.createElement('div');
-
-	newdiv.setAttribute("id","childDiv"+contador_oficial_imagenes);
-
-	newdiv.innerHTML = "&nbsp;<input type='file' id='images"+contador_oficial_imagenes+"' name='images[]'  class='btn btn-warning btn-large fileSelect' />&nbsp;&nbsp;<a class='btn btn-warning btn-large fileSelect' href=\"javascript:;\" onclick=\"removeEvent('childDiv"+contador_oficial_imagenes+"')\">Quitar</a>";
-
-	var ni = document.getElementById('otherimages');
-
-	ni.appendChild(newdiv);
-
-	contador_oficial_imagenes++;
-
-} 
-
-
-function removeEvent(divNum){
-
-	var d = document.getElementById('otherimages');
-
-	var olddiv = document.getElementById(divNum);
-
-	d.removeChild(olddiv);
-
-	contador_oficial_imagenes--;
-
-} 
 
 function fKeyPress(e,tipo){
 	//FUNCION PARA VALIDAR CAMPOS
@@ -312,7 +247,17 @@ function fKeyPress(e,tipo){
 		if(arreglo.indexOf(String.fromCharCode(dKey),0)==-1){ if (e.cancelable) { e.preventDefault(); }	}
 	}
 }
+tinymce.init({
+    selector: "textarea",
+    plugins : "link image paste pagebreak table contextmenu table code textcolor",
+	toolbar1 : "code,|,bold,italic,underline,strikethrough,|,formatselect,|,blockquote,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|",
+	toolbar2: "",
+	lang : "es",
+	theme : "modern",
+	menubar : false,
+	width: 606
 
+ });
 </script>
 
 

@@ -38,12 +38,18 @@ session_start();
                 padding-top: 12px;
                 padding-bottom: 12px;
               }
+
+              .navbar-inverse .navbar-nav>.active>a {
+                background-image: linear-gradient(to bottom,#5cb85c 0,#419641 100%) !important;  
+              }
             }
         </style>
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/jquery.fileupload.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="js/tinymce/tinymce.min.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -58,7 +64,7 @@ session_start();
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Proveedores</a>
+          <a class="navbar-brand" href="#"><img src="/img/logo.png" border="0" style="margin-top:-7px;"/>Portal Proveedores</a>
         </div>
         <div class="navbar-collapse collapse">
           <?php include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/login.php"; ?>
@@ -84,18 +90,34 @@ session_start();
       <hr>
 
       <footer>
-        <p>&copy; Bazaringa Company 2014</p>
+        <p>&copy; 
+            <a href="<?php echo BAZARINGA_WWWPATH; ?>"><img src="http://prueba.bazaringa.com/img/logo.jpg" border="0" style="margin-top:-7px;" width="200px"/>
+            </a></p>
       </footer>
     </div> <!-- /container -->        <script src="/js/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
 
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/bootbox.min.js"></script>
-
+        <script src="js/jquery.tablesorter.js"></script>
+        <script src="js/jquery.tablesorter.widgets.js"></script>
         <script src="js/main.js"></script>
+        
+
+        <script src="js/vendor/jquery.ui.widget.js"></script>
+        <script src="js/load-image.min.js"></script>
+        <script src="js/canvas-to-blob.min.js"></script>
+        <script src="js/jquery.iframe-transport.js"></script>
+        <script src="js/jquery.fileupload.js"></script>
+        <script src="js/jquery.fileupload-process.js"></script>
+        <script src="js/jquery.fileupload-image.js"></script>
+        <script src="js/jquery.fileupload-audio.js"></script>
+        <script src="js/jquery.fileupload-video.js"></script>
+        <script src="js/jquery.fileupload-validate.js"></script>
+
+
 
         <?php loadEspecialJS(); ?>
-
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -105,6 +127,7 @@ session_start();
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
+
         <script>
         $(document).on("click", ".alert", function(e) {
             bootbox.alert("Hello world!", function() {

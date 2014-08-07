@@ -1,6 +1,6 @@
 <?php
 
-$nav = ($_GET['nav'] ? $_GET['nav'] : 'home');
+$nav = ($_GET['nav'] ? $_GET['nav'] : 'inicio');
  
  if ($_SESSION['logueado']==false){
  	$nav = "";
@@ -8,6 +8,11 @@ $nav = ($_GET['nav'] ? $_GET['nav'] : 'home');
 
 switch($nav){
 	case 'home' :
+		header("location: /index.php?nav=inicio");
+		die;
+		//include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/home.php";
+	break;
+	case 'inicio' :
 		include_once $_SERVER["DOCUMENT_ROOT"]."/scripts/home.php";
 	break;
 	case 'productos' :

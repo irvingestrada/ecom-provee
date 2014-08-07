@@ -14,7 +14,7 @@
 	$marketplace_seller_info = $obj_mp_seller->sellerDetail($marketplace_seller_id);
 
 	$logo_path = BAZARINGA_WWWPATH._MODULE_DIR_. 'marketplace/img/shop_img/'.$marketplace_seller_id . '-' . $marketplace_seller_info['shop_name'] . '.jpg';
-
+	$banner_path = BAZARINGA_WWWPATH.'/img/c/'.$marketplace_seller_info["id_category"].'-category_default.jpg';
 	loadjs('js/uploader_preview_tienda.js');
 
 ?>
@@ -89,7 +89,7 @@
   <div class="form-group">
     <label for="update_about_shop" class="col-sm-2 control-label">Descripción de la tienda:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="update_about_shop" name="update_about_shop" placeholder="" value="<?php echo $marketplace_seller_info["about_shop"]; ?>" required>
+      <textarea class="form-control" id="update_about_shop" name="update_about_shop"><?php echo $marketplace_seller_info["about_shop"]; ?></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -143,27 +143,35 @@
   <div class="form-group">
   	<label for="product_size" class="col-sm-2 control-label">Logo:</label>
   	<div class="col-sm-10">
-		<!--<button class="btn btn-warning btn-large fileSelect" name="product_image" style="	">Subir Imagen</button>
-		-->
-		<!--<input class="btn btn-warning btn-large" type="file" name="update_shop_logo" id="update_shop_logo"/>-->
+  		<input class="required" type="file" name="update_shop_logo" id="update_shop_logo" style="display:none;"/>
+		<button id="fileSelect" name="update_shop_logo" class="btn btn-success">Subir Logo</button><br/><br/>
 		<?php
 			if (isset($logo_path)){
 				?><img src="<?php echo $logo_path;?>" alt="<?php echo $marketplace_seller_info['shop_name']; ?>" width="200" height="200"><?php
 			}
 		?>
-		<input class="required" type="file" name="update_shop_logo" id="update_shop_logo" style="display:none;"/>
-		<button id="fileSelect" name="update_shop_logo" class="btn btn-warning btn-large">Subir Logo</button>
-		<div class="info_description" style="margin-left:146px;text-align: center;">Logo Size Must Be 200*200</div>
-
-		<!--<a href="javascript:;" onclick="showOtherImage();">
-			<button class="btn btn-warning btn-large fileSelect"><i class="icon-white icon-heart"></i> Agregar otra imagen</button>
-		</a>-->
-
-
-		<div id="otherimages" style="margin-left:0px;"> </div>
+		
 	</div>
 
 	<div id="preview-images" >
+	</div>
+	
+  </div>
+
+  <div class="form-group">
+  	<label for="product_size" class="col-sm-2 control-label">Banner principal:</label>
+  	<div class="col-sm-10">
+  		<input class="required" type="file" name="update_banner" id="update_banner" style="display:none;"/>
+		<button id="fileSelect2" name="update_banner" class="btn btn-success">Subir Banner</button><br/><br/>
+		<?php
+			if (isset($banner_path)){
+				?><img src="<?php echo $banner_path;?>" alt="<?php echo $marketplace_seller_info['shop_name']; ?>" width="715" height="250"><?php
+			}
+		?>
+		
+	</div>
+
+	<div id="preview-images-banner" >
 	</div>
 	
   </div>
@@ -179,6 +187,12 @@ document.querySelector('#fileSelect').addEventListener('click', function(e) {
 	e.preventDefault();
   	// Use the native click() of the file input.
   	document.querySelector('#update_shop_logo').click();
+}, false);
+
+document.querySelector('#fileSelect2').addEventListener('click', function(e) {
+	e.preventDefault();
+  	// Use the native click() of the file input.
+  	document.querySelector('#update_banner').click();
 }, false);
 
 function fKeyPress(e,tipo){
@@ -234,6 +248,7 @@ function fKeyPress(e,tipo){
 
 <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript">
+/*
 tinymce.init({
     selector: "textarea",
     plugins: [
@@ -242,7 +257,7 @@ tinymce.init({
         "insertdatetime media table contextmenu paste"
     ],
     toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-});
+});*/
 </script>
 
 

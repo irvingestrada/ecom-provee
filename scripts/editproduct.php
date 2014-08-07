@@ -65,7 +65,7 @@
 		 $tree .= "</ul>";
 	}
 ?>
-<form class="form-horizontal" role="form" action="/scripts/proc_editproduct.php" method="post">
+<form class="form-horizontal" role="form" action="/scripts/proc_editproduct.php" method="post" enctype="multipart/form-data">
   <input type="hidden" value="<?php echo $pro_info["id_size"]; ?>" id="product_current_size" name="product_current_size">
   <input type="hidden" value="<?php echo $_POST["form_product_id"]; ?>" id="product_id" name="product_id">
   <div class="form-group">
@@ -77,7 +77,7 @@
   <div class="form-group">
     <label for="product_description" class="col-sm-2 control-label">Descripción del producto:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="product_description" name="product_description" placeholder="Descripción" value="<?php echo $pro_info["description"]; ?>">
+      <textarea class="form-control" id="product_description" name="product_description" ><?php echo $pro_info["description"]; ?></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -92,7 +92,12 @@
       <input type="number" class="form-control" id="product_quantity" name="product_quantity" placeholder="" value="<?php echo $pro_info["quantity"]; ?>" onkeypress="fKeyPress(event,'N');" required pattern="[0-9]*">
     </div>
   </div>
-
+  <div class="form-group">
+    <label for="product_costo_envio" class="col-sm-2 control-label">Costo de envio:</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" id="product_costo_envio" name="product_costo_envio" placeholder="" value="<?php echo $pro_info["costo_envio"]; ?>" onkeypress="fKeyPress(event,'N');" required pattern="[0-9]*">
+    </div>
+  </div>
   <?php
 
   	$obj_mp_shopproduct = new MarketplaceShopProduct();
@@ -136,53 +141,23 @@
 	//var_dump($arreglo_tallas);
 	$haytallas = count($arreglo_tallas);
   ?>
+  <input type="hidden" value="<?php echo $id_product; ?>" id="id_product_gallery">  
   <input type="hidden" value="<?php echo (count($arreglo_tallas)==0) ? '4' : '-1'; ?>" name="product_size_selected" id="product_size_selected" >
   <input type="hidden" name="vsize-chica" id="vsize-chica" value="<?php echo ($arreglo_tallas['S']['id']) ? $arreglo_tallas['S']['id'] : '' ?>">
   <input type="hidden" name="vsize-mediana" id="vsize-mediana" value="<?php echo ($arreglo_tallas['M']['id']) ? $arreglo_tallas['M']['id'] : '' ?>">
   <input type="hidden" name="vsize-grande" id="vsize-grande" value="<?php echo ($arreglo_tallas['L']['id']) ? $arreglo_tallas['L']['id'] : '' ?>">
-  <div class="form-group">
-    <label for="product_size" class="col-sm-2 control-label">Talla:</label>
-    <div class="col-sm-10">
-		<select id="product_size" name="product_size" style="width:20%;" onchange="fnChangeTallaSelect(this);">
-			<option value="0">Seleccionar</option>
-			<option value="4" <?php echo (count($arreglo_tallas)==0) ? 'selected' : ''; ?>>Unitalla</option>
-			<option value="-1" <?php echo (count($arreglo_tallas)>=1) ? 'selected' : ''; ?>>Especificar</option>
-		</select>
-    </div>
-  </div>
-  <div class="form-group" style="display:none;" id="form-tallas-group">
-    <div class="col-sm-5" >
-    	<table class="table" style="margin-left:140px;">
-    	<tr>
-    		<th>Talla</th>
-    		<th>Cantidad</th>
-    	</tr>
-    	<tr>
-    		<td><input type="checkbox" name="size-chica" id="size-chica" value="<?php echo ($arreglo_tallas['S']['id']) ? $arreglo_tallas['S']['id'] : '' ?>"> Chica</td>
-    		<td><input type="number" class="form-control" id="chk-size-chica" name="chk-size-chica" placeholder="" value="<?php echo ($arreglo_tallas['S']['cantidad']) ? $arreglo_tallas['S']['cantidad'] : '' ?>" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
-    	</tr>
-    	<tr>
-    		<td><input type="checkbox" name="size-mediana" id="size-mediana" value="<?php echo ($arreglo_tallas['M']['cantidad']) ? $arreglo_tallas['M']['cantidad'] : '' ?>"> Mediana</td>
-    		<td><input type="number" class="form-control" id="chk-size-mediana" name="chk-size-mediana" placeholder="" value="<?php echo ($arreglo_tallas['M']['cantidad']) ? $arreglo_tallas['M']['cantidad'] : '' ?>" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
-    	</tr>
-    	<tr>
-    		<td><input type="checkbox" name="size-grande" id="size-grande" value="<?php echo ($arreglo_tallas['L']['cantidad']) ? $arreglo_tallas['L']['cantidad'] : '' ?>"> Grande</td>
-    		<td><input type="number" class="form-control" id="chk-size-grande" name="chk-size-grande" placeholder="" value="<?php echo ($arreglo_tallas['L']['cantidad']) ? $arreglo_tallas['L']['cantidad'] : '' ?>" onkeypress="fKeyPress(event,'N');" pattern="[0-9]*"></td>
-    	</tr>
-    	</table>
-    </div>
-  </div>
+  <input type="hidden" value="4" name="product_size" id="product_size">
   <?php
   	
 	$id_image_detail = $product->getImages($id_lang);
-	
+
 	$product_link_rewrite = Db::getInstance()->getRow("select * from `". _DB_PREFIX_."product_lang` where `id_product`=".$id_product." and `id_lang`=1");
 	$name = $product_link_rewrite['link_rewrite'];
 	//var_dump($id_image_detail);
 	$img_info = array();
 	$link = new Link();
-	echo '<div class="container">';
-	echo '<div class="row">';
+
+	$i = 0;
 	foreach($id_image_detail as $id_image_info)
   	{
 		$img_info[$i]['id_image'] = $id_image_info['id_image'];
@@ -190,49 +165,16 @@
 		$img_info[$i]['image_link'] = $link->getImageLink($name,$ids);
 		$img_info[$i]['cover'] = $id_image_info['cover'];
 		$img_info[$i]['position'] = $id_image_info['position'];?>
-		<div class="col-sm-6 col-md-4">
-		    	<div class="thumbnail">
-		      		<img src="//<?php echo $img_info[$i]['image_link']; ?>" width="70%">
-		      		<div class="caption">
-		      				<?php 
-		      				if ($img_info[$i]['cover']=="1"){
-		      					?><p>Posicion : <?php echo $img_info[$i]['position']; ?>, Imagen principal</p><?php
-		      				}else{
-		      					?><p>Posicion : <?php echo $img_info[$i]['position']; ?></p> <?php
-		      				}
-		      				?>
-		      		</div>
-		    	</div>
-		  	</div>
+		<input type="hidden" name="old_image-<?php echo $i; ?>" value="<?php echo $id_image_info['id_image']; ?>">
 		<?php 
 		$i++;
   	}
-  	echo '</div>';	
-  	echo '</div>';
-
-
 
   ?>
-  <div class="form-group">
-  	<label for="product_size" class="col-sm-2 control-label">Imagenes:</label>
-  	<div class="col-sm-10">
-		<button class="btn btn-warning btn-large fileSelect" name="product_image" style="	">Subir Imagen</button>
-		
-		<a href="javascript:;" onclick="showOtherImage();">
-		<button class="btn btn-warning btn-large fileSelect"><i class="icon-white icon-heart"></i> Agregar otra imagen</button>
-		</a>
-		<div id="otherimages" style="margin-left:0px;"> </div>
-	</div>
+<span id="imagenes_tabla">
 
-	<div id="preview-images" >
-	</div>
+</span>
 
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-    	<input type="file" id="product_image" name="product_image" value="" class="account_input" size="chars" style="display:none;"  />
-    </div>
-  </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button type="submit" class="btn btn-default">Actualizar</button>
@@ -240,6 +182,21 @@
   </div>
 </form>	
 <script type="text/javascript">
+tinymce.init({
+    selector: "textarea",
+    plugins : "link image paste pagebreak table contextmenu table code textcolor",
+	toolbar1 : "code,|,bold,italic,underline,strikethrough,|,formatselect,|,blockquote,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|",
+	toolbar2: "",
+	lang : "es",
+	theme : "modern",
+	menubar : false,
+	width: 606
+
+ });
+
+</script>
+<script language="javascript" type="text/javascript">
+
 function fnChangeTallaSelect(evento){
 	if (evento.value==-1){
 		$("#form-tallas-group").show();
@@ -249,50 +206,6 @@ function fnChangeTallaSelect(evento){
 		$("#product_quantity").focus();
 	}
 }
-
-</script>
-<script language="javascript" type="text/javascript">
-
-document.querySelector('.fileSelect').addEventListener('click', function(e) {
-	e.preventDefault();
-  	// Use the native click() of the file input.
-  	document.querySelector('#product_image').click();
-}, false);
-
-	var contador_oficial_imagenes=1+<?php echo $i; ?>;
-
-function showOtherImage() {
-	if (contador_oficial_imagenes==3){
-		alert("Máximo 3 imagenes por producto");
-		return false;
-	}	
-	var newdiv = document.createElement('div');
-
-	newdiv.setAttribute("id","childDiv"+contador_oficial_imagenes);
-
-	newdiv.innerHTML = "&nbsp;<input type='file' id='images"+contador_oficial_imagenes+"' name='images[]'  class='btn btn-warning btn-large fileSelect' />&nbsp;&nbsp;<a class='btn btn-warning btn-large fileSelect' href=\"javascript:;\" onclick=\"removeEvent('childDiv"+contador_oficial_imagenes+"')\">Quitar</a>";
-
-	var ni = document.getElementById('otherimages');
-
-	ni.appendChild(newdiv);
-
-	contador_oficial_imagenes++;
-
-} 
-
-
-function removeEvent(divNum){
-
-	var d = document.getElementById('otherimages');
-
-	var olddiv = document.getElementById(divNum);
-
-	d.removeChild(olddiv);
-
-	contador_oficial_imagenes--;
-
-} 
-
 function fKeyPress(e,tipo){
 	//FUNCION PARA VALIDAR CAMPOS
 	var evt = (e) ? e : event
@@ -341,5 +254,4 @@ function fKeyPress(e,tipo){
 		if(arreglo.indexOf(String.fromCharCode(dKey),0)==-1){ if (e.cancelable) { e.preventDefault(); }	}
 	}
 }
-
 </script>

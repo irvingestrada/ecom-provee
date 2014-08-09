@@ -40,6 +40,68 @@ $("#conektaform").submit(function() {
 	}
 });
 
+
+$( "#passwordform" ).submit(function( event ) {
+  event.preventDefault();
+
+  
+
+  if ($("#currentpassword").val()=="" || $("#newpassword").val()=="" || $("#confirmpassword").val()==""){
+  		bootbox.alert("Los campos de contraseña no pueden quedar vacios.", function() { 
+			if ($("#currentpassword").val()==""){
+				$("#currentpassword").focus(5000);
+			}
+			if ($("#newpassword").val()==""){
+				$("#newpassword").focus();
+			}
+			if ($("#confirmpassword").val()==""){
+				$("#confirmpassword").focus();
+			}
+		});
+  		return false;
+  }
+  if ($("#newpassword").val()!=$("#confirmpassword").val()){
+  	bootbox.alert("La nueva contraseña y la confirmación de contraseña no son iguales, favor de revisar.", function() { 
+  		$("#newpassword").focus();
+  	});
+  	return false;
+  }
+  	$.ajax({
+		type: 	'POST',
+		url:	'/scripts/validar_password.php',
+		async: 	false,
+		data: 	'password='+$("#currentpassword").val(),
+		cache: 	false,
+		success: function(data){
+		
+			var json= $.parseJSON(data);
+			if (json.status=="ok"){
+				if (json.error != ""){
+					bootbox.alert(json.error, function() { 
+						
+					});	
+					return false;
+				}else{
+					var $form;
+  					$form = $("#passwordform");
+					$form.get(0).submit();
+					return true;
+				}
+				
+			}else if (json.status==-1){
+				bootbox.alert("Error al consultar servicio", function() { });
+				return false;
+			}
+		}
+	});
+  	return true;
+  
+});
+
+$('.alert-danger').on('focus', function () {
+	$('.alert-danger').hide();
+});
+
 function fnCerrarTienda(){
 	bootbox.confirm("¿Estas seguro de cerrar la tienda, se perderan todos tus productos?", function(result) {
 		if (result){
@@ -51,7 +113,6 @@ function fnCerrarTienda(){
 				cache: 	false,
 				success: function(data)
 				{
-					console.log(data);
 					
 					var json= $.parseJSON(data);
 					if (json.status==1){

@@ -54,14 +54,38 @@ key_WEHZr6rAsrhUksvhwLTGwjw
 		echo $e->getMessage();
 	}
 ?>
+<?php 
+if (isset($_GET["error_msg"])){?>
+	<div class="alert alert-danger" role="alert">
+		<?php 
+			switch ($_GET["error_msg"]) {
+				case 'newpassword_syntax':
+					echo "La contraseña nueva proporcionada no cumple con el formato de contraseña.";
+				break;
+				case 'currentpassword_syntax':
+					echo "La contraseña actual proporcionada no cumple con el formato de contraseña.";
+				break;
+				case 'currentpassword_value':
+					echo "La contraseña actual proporcionada no es la correcta.";
+				break;
+				
+			}				
 
+		?>
+	</div>
+
+<?php }
+
+?>
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
   <!--<li class="active"><a href="#seo" role="tab" data-toggle="tab">SEO</a></li>-->
   <li><a href="#payment" role="tab" data-toggle="tab">Medio de Pago</a></li>
   <li><a href="#packages" role="tab" data-toggle="tab">Paquetes</a></li>
   <li><a href="#tarjeta" role="tab" data-toggle="tab">Cambiar Tarjeta</a></li>
+  <li><a href="#tabcontrasena" role="tab" data-toggle="tab">Cambiar Contraseña</a></li>
   <li><a href="#cerrar" role="tab" data-toggle="tab">Cierre</a></li>
+
 </ul>
 
 <br/>
@@ -203,6 +227,40 @@ key_WEHZr6rAsrhUksvhwLTGwjw
 	</form>
   </div>  
 
+  <div class="tab-pane" id="tabcontrasena">
+  	<form class="form-horizontal" role="form" action="/scripts/proc_modpassword.php" method="post" id="passwordform">
+	 	<div class="form-group">
+			<label for="currentpassword" class="col-sm-2 control-label">
+				Contraseña actual
+            </label>
+		 	<div class="col-sm-10">
+				<input class="reg_sel_input" type="password" name="currentpassword" id="currentpassword"/>
+         	</div>
+		</div>
+		<div class="form-group">
+			<label for="newpassword" class="col-sm-2 control-label">
+					Nueva contraseña
+			</label>
+			<div class="col-sm-10">
+	      		<input type="password" size="20" class="account_input" id="newpassword" name="newpassword"/>
+		    </div>
+		</div>
+	  	<div class="form-group">
+			<label for="update_meta_description" class="col-sm-2 control-label">
+	      			Confirmar contraseña
+	      	</label>
+	      	<div class="col-sm-10">
+	      		<input type="password" class="account_input" id="confirmpassword" name="confirmpassword"/>
+    		</div>
+		</div>
+		<div class="form-group">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      	<button type="submit" class="btn btn-default center">Actualizar</button>
+		    </div>
+	  </div>	
+	</form>
+  </div>  
+
   <div class="tab-pane" id="cerrar">
   	<form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
 	  <div class="form-group">
@@ -266,7 +324,7 @@ function fKeyPress(e,tipo){
 	var evt = (e) ? e : event
 	var dKey = (evt.which) ? evt.which : evt.keyCode;
 	if(dKey==13) return;
-	console.log(tipo);
+
 	switch(tipo){
 		case "NP": //Numeros - Acepta �nicamente numeros
 			var arreglo="0123456789.";

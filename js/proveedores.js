@@ -7,7 +7,7 @@ $('a.btn').on('click', function(e) {
 	var vidHeight = 315; // default
 	if ( $(this).attr('data-width') ) { vidWidth = parseInt($(this).attr('data-width')); }
 	if ( $(this).attr('data-height') ) { vidHeight =  parseInt($(this).attr('data-height')); }
-	var iFrameCode = '<iframe width="' + vidWidth + '" height="'+ vidHeight +'" scrolling="no" allowtransparency="true" allowfullscreen="true" src="'+  $(this).attr('href') +'" frameborder="0"></iframe>';
+	var iFrameCode = '<iframe width="' + vidWidth + '" height="'+ vidHeight +'" scrolling="yes" allowtransparency="true" allowfullscreen="true" src="'+  $(this).attr('href') +'" frameborder="0"></iframe>';
 
 	// Replace Modal HTML with iFrame Embed
 	$('#mediaModal .modal-body').html(iFrameCode);

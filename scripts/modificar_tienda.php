@@ -13,8 +13,8 @@
 					
 	$marketplace_seller_info = $obj_mp_seller->sellerDetail($marketplace_seller_id);
 
-	$logo_path = BAZARINGA_WWWPATH._MODULE_DIR_. 'marketplace/img/shop_img/'.$marketplace_seller_id . '-' . $marketplace_seller_info['shop_name'] . '.jpg';
-	$banner_path = BAZARINGA_WWWPATH.'/img/c/'.$marketplace_seller_info["id_category"].'-category_default.jpg';
+	$logo_path = BAZARINGA_WWWPATH._MODULE_DIR_. 'marketplace/img/shop_img/'.$marketplace_seller_id . '-' . $marketplace_seller_info['shop_name'] . '.jpg?ms='.time();
+	$banner_path = BAZARINGA_WWWPATH.'/img/c/'.$marketplace_seller_info["id_category"].'-category_default.jpg?ms='.time();
 	loadjs('js/uploader_preview_tienda.js');
 
 ?>

@@ -40,6 +40,29 @@ $("#conektaform").submit(function() {
 	}
 });
 
+$("#tarjetaform").submit(function(event) {
+		var $form;
+		$form = $(this);
+		$form.find("button").prop("disabled", true);
+		Conekta.token.create($form, conektaSuccessResponseHandler, conektaErrorResponseHandler);
+		return false;
+});
+
+  var conektaSuccessResponseHandler;
+  conektaSuccessResponseHandler = function(token) {
+  	var $form;
+  	$form = $("#tarjetaform");
+  	$form.append($("<input type=\"hidden\" name=\"conektaTokenId\" />").val(token.id));
+ 	$form.get(0).submit();
+  };
+
+  var conektaErrorResponseHandler;
+  conektaErrorResponseHandler = function(response) {
+  	var $form;
+  	$form = $("#tarjetaform");
+  	$form.find(".card-errors").text(response.message);
+  	$form.find("button").prop("disabled", false);
+  };
 
 $( "#passwordform" ).submit(function( event ) {
   event.preventDefault();
@@ -129,3 +152,54 @@ function fnCerrarTienda(){
 	});
 
 }
+
+function fKeyPress(e,tipo){
+	//FUNCION PARA VALIDAR CAMPOS
+	var evt = (e) ? e : event
+	var dKey = (evt.which) ? evt.which : evt.keyCode;
+	if(dKey==13) return;
+
+	switch(tipo){
+		case "NP": //Numeros - Acepta �nicamente numeros
+			var arreglo="0123456789.";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "N": //Numeros - Acepta �nicamente numeros
+			var arreglo="0123456789";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "F": //Fecha - Acepta �nicamente numeros y Diagonal
+			var arreglo="0123456789/";
+			if(dKey==8)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "A": //Alfanumerico - Acepta alfanumerico
+			var arreglo='ABCDEFGHIJGKLMN�OPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz0123456789 ';
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "S": //Alfabetico - Acepta letras y signos especificos
+			var arreglo="A�BCDE�FGHI�JGKLMN�O�PQRSTU�VWXYZa�bcde�fghi�jklmn�o�pqrstu�vwxyz,.-/ ";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "L": //ABC - Acepta �nicamente letras y espacio
+			var arreglo="ABCDEFGHIJGKLMN�OPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz ";
+			if(dKey==8 || dKey==9)return; //Permite pulsacion de Backspace y Tab
+			break;
+		case "R": //Alfabetico - Acepta letras y numeros
+			var arreglo="ABCDEFGHIJGKLMNOPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz1234567890,.-/ ";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+		case "D": //Alfabetico - Acepta letras y numeros
+			var arreglo=" ABCDEFGHIJGKLMNOPQRSTUVWXYZabcdefghijklmn�opqrstuvwxyz1234567890";	
+			if(dKey==8 || dKey==9 || dKey==44 || dKey==45 || dKey==46)return; //Permite pulsacion de Backspace, Tab, Coma, Punto y Guion
+			break;
+	}
+
+	if (document.all) { //IE
+		if(arreglo.indexOf(String.fromCharCode(dKey),0)!=-1){ event.returnValue = true;	}
+		else{ event.returnValue = false; }
+	}else { //Mozilla
+		if(arreglo.indexOf(String.fromCharCode(dKey),0)==-1){ if (e.cancelable) { e.preventDefault(); }	}
+	}
+}
+
+$('#alert_message').show(0).delay(3400).hide(0);

@@ -50,4 +50,66 @@ $.extend($.tablesorter.themes.bootstrap, {
 	if (contador_registros==0){
     	$(".alert-success").show();
   	}
+
 });
+
+function fnChangeShipped(value){
+	if (value!=""){
+		if (value=="Shipped"){
+			$("#show_guia").show();
+		}
+	}
+}
+
+function loadorderinfo(id_order){
+    
+    $.ajax({
+      url: '/scripts/loadOrderDetail.php?id_order='+id_order,
+        success: function(data) {
+          $("#ajax_content").html(data);
+        }
+    });
+
+  }
+
+  function loadorderinfoSample(id_order){
+    
+    $.ajax({
+      url: '/scripts/loadOrderDetail'+id_order+'.html',
+        success: function(data) {
+          $("#ajax_content").html(data);
+        }
+    });
+
+  }
+
+  function fnCambiarEstatus(id_order){
+    var estatus = $("#estatus-"+id_order).val();
+    if (id_order!=''){
+      $.ajax({
+        url: '/scripts/ajax-update-status.php?id_order='+id_order+'&id_status='+estatus,
+          success: function(data) {
+            window.location.reload();
+          }
+      });
+    }
+  }
+
+  function fnCambiarEstatusEnvioSample(id_order){
+    $.ajax({
+      url: '/scripts/loadOrderDetail'+id_order+'Cambio.html',
+        success: function(data) {
+          $("#cont_ventas").html(data);
+        }
+    });
+  }
+
+  function fnCambiarEstatusEnvio(id_order){
+    $.ajax({
+      url: '/scripts/loadOrderDetailCambio.php',
+      data: {'id_order' :  id_order },
+        success: function(data) {
+          $("#cont_ventas").html(data);
+        }
+    });
+  }

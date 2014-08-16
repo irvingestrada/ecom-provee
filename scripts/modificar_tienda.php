@@ -54,6 +54,10 @@
 	.list_content li span a {
 	    color: #000000 !important;
 	}
+	.nota{
+		font-size: 10px;
+		font-style: italic;
+	}
 
 </style>
 <?php 
@@ -89,7 +93,7 @@
   <div class="form-group">
     <label for="update_about_shop" class="col-sm-2 control-label">Descripción de la tienda:</label>
     <div class="col-sm-10">
-      <textarea class="form-control" id="update_about_shop" name="update_about_shop"><?php echo $marketplace_seller_info["about_shop"]; ?></textarea>
+      <textarea class="form-control" id="update_about_shop" name="update_about_shop" rows="4"><?php echo $marketplace_seller_info["about_shop"]; ?></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -107,7 +111,7 @@
   <div class="form-group">
     <label for="update_address" class="col-sm-2 control-label">Dirección:</label>
     <div class="col-sm-10">
-      <textarea class="form-control" id="update_address" name="update_address"><?php echo $marketplace_seller_info["address"]; ?></textarea>
+      <textarea class="form-control" id="update_address" name="update_address" rows="4"><?php echo $marketplace_seller_info["address"]; ?></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -119,42 +123,45 @@
   <div class="form-group">
     <label for="update_polenvio" class="col-sm-2 control-label">Politica de envio:</label>
     <div class="col-sm-10">
-      <textarea class="form-control" id="update_polenvio" name="update_polenvio"><?php echo $marketplace_seller_info["politica_envio"]; ?></textarea>
+      <textarea class="form-control" id="update_polenvio" name="update_polenvio" rows="4"><?php echo $marketplace_seller_info["politica_envio"]; ?></textarea>
     </div>
   </div>
   <div class="form-group">
     <label for="update_poldevol" class="col-sm-2 control-label">Politica de devoluciones:</label>
     <div class="col-sm-10">
-      <textarea class="form-control" id="update_poldevol" name="update_poldevol"><?php echo $marketplace_seller_info["politica_devolucion"]; ?></textarea>
+      <textarea class="form-control" id="update_poldevol" name="update_poldevol" rows="4"><?php echo $marketplace_seller_info["politica_devolucion"]; ?></textarea>
     </div>
   </div>
   <div class="form-group">
     <label for="update_polgaran" class="col-sm-2 control-label">Politica de garantia:</label>
     <div class="col-sm-10">
-      <textarea class="form-control" id="update_polgaran" name="update_polgaran" ><?php echo $marketplace_seller_info["politica_garantia"]; ?></textarea>
+      <textarea class="form-control" id="update_polgaran" name="update_polgaran" rows="4"><?php echo $marketplace_seller_info["politica_garantia"]; ?></textarea>
     </div>
   </div>
   <div class="form-group">
     <label for="update_infoadic" class="col-sm-2 control-label">Información adicional:</label>
     <div class="col-sm-10">
-      <textarea class="form-control" id="update_infoadic" name="update_infoadic"><?php echo $marketplace_seller_info['informacion_adicional'];?></textarea>
+      <textarea class="form-control" id="update_infoadic" name="update_infoadic" rows="4"><?php echo $marketplace_seller_info['informacion_adicional'];?></textarea>
     </div>
   </div>
   <div class="form-group">
   	<label for="product_size" class="col-sm-2 control-label">Logo:</label>
   	<div class="col-sm-10">
   		<input class="required" type="file" name="update_shop_logo" id="update_shop_logo" style="display:none;"/>
-		<button id="fileSelect" name="update_shop_logo" class="btn btn-success">Subir Logo</button><br/><br/>
+		<button id="fileSelect" name="update_shop_logo" class="btn btn-success">Subir Logo</button>
+		<span class="nota">El tamaño del logo sugerido es de 200px de ancho por 200px de alto.</span><br/><br/>
+
+		<div id="preview-images" >
 		<?php
 			if (isset($logo_path)){
 				?><img src="<?php echo $logo_path;?>" alt="<?php echo $marketplace_seller_info['shop_name']; ?>" width="200" height="200"><?php
 			}
 		?>
+		</div>
 		
 	</div>
 
-	<div id="preview-images" >
-	</div>
+	
 	
   </div>
 
@@ -162,17 +169,20 @@
   	<label for="product_size" class="col-sm-2 control-label">Banner principal:</label>
   	<div class="col-sm-10">
   		<input class="required" type="file" name="update_banner" id="update_banner" style="display:none;"/>
-		<button id="fileSelect2" name="update_banner" class="btn btn-success">Subir Banner</button><br/><br/>
+		<button id="fileSelect2" name="update_banner" class="btn btn-success banner">Subir Banner</button>
+		<span class="nota">El tamaño del banner sugerido es de 715px de ancho por 250px de alto.</span><br/><br/>
+		<div id="preview-images-banner" >
 		<?php
 			if (isset($banner_path)){
 				?><img src="<?php echo $banner_path;?>" alt="<?php echo $marketplace_seller_info['shop_name']; ?>" width="715" height="250"><?php
 			}
 		?>
+		</div>
 		
 	</div>
 
-	<div id="preview-images-banner" >
-	</div>
+	
+	
 	
   </div>
   <div class="form-group">

@@ -26,7 +26,6 @@ function readURL(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-        	console.log("imagen contador oficial "+contador_oficial_imagenes);
 			var t = template_image("preview-image-"+contador_oficial_imagenes,e.target.result);
 			if (t==0){
 				$('#preview-image-'+contador_oficial_imagenes).hide();

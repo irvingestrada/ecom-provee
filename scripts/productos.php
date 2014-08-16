@@ -7,7 +7,7 @@
 	$obj_mp_seller = new SellerInfoDetail();
 	$obj_mp_shop = new MarketplaceShop();
 	$obj_mp_seller_product = new SellerProductDetail();
-	$productList = $obj_mp_seller_product->getProductList($_SESSION["marketplace_seller_id"],$orderby,$orderway,1, 300);
+	$productList = $obj_mp_seller_product->getProductList($_SESSION["marketplace_seller_id"],null,null,1, 300);
 	$obj_seller = new SellerInfoDetail($_SESSION["marketplace_seller_id"]);
 	$pay_mode = Db::getInstance()->ExecuteS("SELECT * from `"._DB_PREFIX_."marketplace_payment_mode` where id = ".$obj_seller->paquete_comprado);
 	$tope_articulos = $pay_mode[0]["paquete_cantidad"];

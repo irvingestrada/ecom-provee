@@ -22,5 +22,47 @@ if (isset($_SESSION['id_customer']) && isset($_SESSION['logueado'])){
 	$nombre_sesion			= $_SESSION['nombre_sesion'];
 	
 }
+function getListEstatus(){
+    $array = array();
+    $array[] = array ("id" => 2, "Texto" => "Pago Realizado");
+    $array[] = array ("id" => 4, "Texto" => "Enviado");
+    $array[] = array ("id" => 5, "Texto" => "Entregado");
+    $array[] = array ("id" => 6, "Texto" => "Cancelado");
+    $array[] = array ("id" => 7, "Texto" => "Devolución");
+    return $array;
+  }
+  
+function getRealStatus ($id){
+    switch ($id) {
+      case 'Payment accepted':
+        return 'Pago Realizado';
+        break;
+      case 'Shipped':
+        return 'Enviado';
+        break;
+      case 'Delivered':
+        return 'Entregado';
+        break;
+      case 'Canceled':
+        return 'Cancelado';
+        break;
+      case 'Refund':
+        return 'Devolución';
+        break;
+      case 'Tarjeta de Credito / Debito':
+        return 'Pago TC/Debito';
+        break;
+      case 'Esperando respuesta proveedor de pago':
+        return 'Pago TC/Debito';
+        break;
+      case 'Pago con Oxxo':
+        return 'Pago en Oxxo';
+        break;
+      default:
+          $pago = "Error estatus";
+        break;
+      return $pago;
+    }
+  }
 
 ?>

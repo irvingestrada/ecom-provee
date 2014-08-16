@@ -106,20 +106,17 @@
 									'seller_product_image_id' => pSQL($u_id),
 									'position' => 0
 							));
-				echo 'seller_product_id = (int) '.$seller_product_id.' seller_product_image_id = '.$u_id.' position = '.$position;
 				$image_name = $u_id . ".jpg";
 				//$movido = move_uploaded_file($file_exists, $address . $image_name);
-				var_dump($address . $image_name);
-				echo " vs ";
-				var_dump($file_exists);
+
 				rename ($file_exists, $address . $image_name);
 				if (file_exists($address . $image_name)){
-					echo "ya la hicimos";
+					//echo "ya la hicimos";
 				}else{
-					echo "valio maiz";
+					//echo "valio maiz";
 				}
 			}else{
-				echo "valio madres 2";
+				//echo "valio madres 2";
 			}
 		}
 

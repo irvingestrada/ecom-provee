@@ -98,7 +98,8 @@ session_start();
         <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
 
         <script src="js/vendor/bootstrap.min.js"></script>
-        <script src="js/bootbox.min.js"></script>
+        <!--<script src="js/bootbox.min.js"></script>-->
+        <script src="js/bootbox.js"></script>
         <script src="js/jquery.tablesorter.js"></script>
         <script src="js/jquery.tablesorter.widgets.js"></script>
         <script src="js/main.js"></script>
@@ -130,9 +131,7 @@ session_start();
 
         <script>
         $(document).on("click", ".alert", function(e) {
-            bootbox.alert("Hello world!", function() {
-                console.log("Alert Callback");
-            });
+           
         });
         </script>
     </body>

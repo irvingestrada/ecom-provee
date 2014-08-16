@@ -55,7 +55,7 @@
 	</td>
 </tr>
 <tr>
-	<td>
+	<td style="width:33%;text-align:center;">
 		<div id="file-1" class="files" style='text-align:center;'>
 			<?php if (isset($img_info[0]['image_link'])){ ?>
 			<img src="//<?php echo $img_info[0]['image_link']; ?>" width="70%" id="preview-<?php echo $img_info[0]['id_image']; ?>">
@@ -67,7 +67,7 @@
   			<?php } ?>
 		</div>
 	</td>
-	<td>
+	<td style="width:33%;text-align:center;">
 		<div id="file-2" class="files" style='text-align:center;'>
 			<?php if (isset($img_info[1]['image_link'])){ ?>
 			<img src="//<?php echo $img_info[1]['image_link']; ?>" width="70%" id="preview-<?php echo $img_info[1]['id_image']; ?>">
@@ -78,7 +78,7 @@
       		<?php } ?>
 		</div>
 	</td>
-	<td>
+	<td style="width:33%;text-align:center;">
 		<div id="file-3" class="files" style='text-align:center;'>
 			<?php if (isset($img_info[2]['image_link'])){ ?>
 			<img src="//<?php echo $img_info[2]['image_link']; ?>" width="70%" id="preview-<?php echo $img_info[2]['id_image']; ?>">

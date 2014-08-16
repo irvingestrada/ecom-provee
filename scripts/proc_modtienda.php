@@ -58,74 +58,79 @@
 
 
     $market_place_seller_info = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow("select * from `" . _DB_PREFIX_ . "marketplace_seller_info` where id =" . $market_seller_id['marketplace_seller_id'] . "");
-	if ($_FILES['update_shop_logo']["size"] != 0)
-	{
-		list($shop_width, $shop_height) = getimagesize($_FILES['update_shop_logo']['tmp_name']);
-	}
-	if ($_FILES['update_seller_logo']["size"] != 0)
-	{
-		list($seller_width, $seller_height) = getimagesize($_FILES['update_seller_logo']['tmp_name']);
-		
-		if ($_FILES['update_seller_logo']['error'] == 0) {
-		    $validExtensions1 = array(
-		        '.jpg',
-		        '.jpeg',
-		        '.gif',
-		        '.png'
-		    );
-			
-		    $fileExtension1   = strrchr($_FILES['update_seller_logo']['name'], ".");
-		    if (in_array($fileExtension1, $validExtensions1)) {
-		        $manipulator1        = new ImageManipulator($_FILES['update_seller_logo']['tmp_name']);
-		        $newSellerImage           = $manipulator1->resample(200, 200);
-		        $seller_new_logo_name = $market_seller_id['marketplace_seller_id'] . ".jpg";
-		        $manipulator1->save(BAZARINGA_PATH.'modules/marketplace/img/seller_img/' . $seller_new_logo_name);
-		    }
-        }
-            			
-	}
-	
+
+    if (isset($_FILES['update_seller_logo'])){
+        if ($_FILES['update_shop_logo']["size"] != 0)
+    	{
+    		list($shop_width, $shop_height) = getimagesize($_FILES['update_shop_logo']['tmp_name']);
+    	}
+    	if ($_FILES['update_seller_logo']["size"] != 0)
+    	{
+    		list($seller_width, $seller_height) = getimagesize($_FILES['update_seller_logo']['tmp_name']);
+    		
+    		if ($_FILES['update_seller_logo']['error'] == 0) {
+    		    $validExtensions1 = array(
+    		        '.jpg',
+    		        '.jpeg',
+    		        '.gif',
+    		        '.png'
+    		    );
+    			
+    		    $fileExtension1   = strrchr($_FILES['update_seller_logo']['name'], ".");
+    		    if (in_array($fileExtension1, $validExtensions1)) {
+    		        $manipulator1        = new ImageManipulator($_FILES['update_seller_logo']['tmp_name']);
+    		        $newSellerImage           = $manipulator1->resample(200, 200);
+    		        $seller_new_logo_name = $market_seller_id['marketplace_seller_id'] . ".jpg";
+    		        $manipulator1->save(BAZARINGA_PATH.'modules/marketplace/img/seller_img/' . $seller_new_logo_name);
+    		    }
+            }
+                			
+    	}
+    }
 	
     $market_place_shop_name   = $market_place_seller_info['shop_name'];
-    if ($_FILES['update_shop_logo']["size"] == 0) {
-        if ($market_place_shop_name!=$shop_name) {
-            $shop_prev_logo_name=$market_seller_id['marketplace_seller_id']."-".$market_place_shop_name;
-            $shop_prev_logo_name1=glob(BAZARINGA_PATH.'modules/marketplace/img/shop_img/'.$shop_prev_logo_name.'.*');
-            $shop_image_path=BAZARINGA_PATH.'modules/marketplace/img/shop_img/';
-            $is_shop_image_exist=$shop_prev_logo_name1[0];
+    if (isset($_FILES['update_shop_logo'])){
+        if ($_FILES['update_shop_logo']["size"] == 0) {
+            if ($market_place_shop_name!=$shop_name) {
+                $shop_prev_logo_name=$market_seller_id['marketplace_seller_id']."-".$market_place_shop_name;
+                $shop_prev_logo_name1=glob(BAZARINGA_PATH.'modules/marketplace/img/shop_img/'.$shop_prev_logo_name.'.*');
+                $shop_image_path=BAZARINGA_PATH.'modules/marketplace/img/shop_img/';
+                $is_shop_image_exist=$shop_prev_logo_name1[0];
+                if (file_exists($is_shop_image_exist)) {
+                    $shop_new_logo_name = $market_seller_id['marketplace_seller_id']."-".$shop_name.".jpg";
+                    rename($shop_image_path.$shop_prev_logo_name.'.jpg',$shop_image_path.$shop_new_logo_name);
+                }
+            }
+        } else {
+            $shop_image_path      = BAZARINGA_PATH.'modules/marketplace/img/shop_img/';
+            $shop_prev_logo_name  = $market_seller_id['marketplace_seller_id']."-".$market_place_shop_name;
+            $shop_prev_logo_name1 = glob($shop_image_path . $shop_prev_logo_name.'.*');
+            $is_shop_image_exist  = $shop_prev_logo_name1[0];
             if (file_exists($is_shop_image_exist)) {
-                $shop_new_logo_name = $market_seller_id['marketplace_seller_id']."-".$shop_name.".jpg";
-                rename($shop_image_path.$shop_prev_logo_name.'.jpg',$shop_image_path.$shop_new_logo_name);
+                unlink($shop_prev_logo_name1[0]);
             }
-        }
-    } else {
-        $shop_image_path      = BAZARINGA_PATH.'modules/marketplace/img/shop_img/';
-        $shop_prev_logo_name  = $market_seller_id['marketplace_seller_id']."-".$market_place_shop_name;
-        $shop_prev_logo_name1 = glob($shop_image_path . $shop_prev_logo_name.'.*');
-        $is_shop_image_exist  = $shop_prev_logo_name1[0];
-        if (file_exists($is_shop_image_exist)) {
-            unlink($shop_prev_logo_name1[0]);
-        }
-        if ($_FILES['update_shop_logo']['error'] == 0) {
-            $validExtensions = array(
-                '.jpg',
-                '.jpeg',
-                '.gif',
-                '.png'
-            );
-            $fileExtension   = strrchr($_FILES['update_shop_logo']['name'], ".");
-            if (in_array($fileExtension, $validExtensions)) {
-                $newNamePrefix      = time() . '_';
-                $manipulator        = new ImageManipulator($_FILES['update_shop_logo']['tmp_name']);
-                $newImage           = $manipulator->resample($shop_width, $shop_height);
-                $shop_new_logo_name = $market_seller_id['marketplace_seller_id'] . "-" . $shop_name . ".jpg";
-                $manipulator->save(BAZARINGA_PATH.'modules/marketplace/img/shop_img/' . $shop_new_logo_name);
+            if ($_FILES['update_shop_logo']['error'] == 0) {
+                $validExtensions = array(
+                    '.jpg',
+                    '.jpeg',
+                    '.gif',
+                    '.png'
+                );
+                $fileExtension   = strrchr($_FILES['update_shop_logo']['name'], ".");
+                if (in_array($fileExtension, $validExtensions)) {
+                    $newNamePrefix      = time() . '_';
+                    $manipulator        = new ImageManipulator($_FILES['update_shop_logo']['tmp_name']);
+                    $newImage           = $manipulator->resample(200, 200, false);
+                    $shop_new_logo_name = $market_seller_id['marketplace_seller_id'] . "-" . $shop_name . ".jpg";
+                    $manipulator->save(BAZARINGA_PATH.'modules/marketplace/img/shop_img/' . $shop_new_logo_name);
 
+                }
+            }else{
+       
             }
-        }else{
-   
         }
     }
+
     $obj_seller = new SellerInfoDetail($_SESSION['marketplace_seller_id']);
     if ($_FILES['update_banner']['error'] == 0) {
         //img/c/60-category_default.jpg
@@ -145,7 +150,7 @@
         if (in_array($fileExtension, $validExtensions)) {
             $newNamePrefix      = time() . '_';
             $manipulator        = new ImageManipulator($_FILES['update_banner']['tmp_name']);
-            $newImage           = $manipulator->resample(715, 250);
+            $newImage           = $manipulator->resample(715, 250, false);
             $manipulator->save(BAZARINGA_PATH.'img/c/'.$obj_seller->id_category.'-category_default.jpg');
             $manipulator->save(BAZARINGA_PATH.'img/c/'.$obj_seller->id_category.'.jpg');
 
@@ -170,6 +175,15 @@
     $obj_seller->informacion_adicional = $update_infoadic;
     
     $obj_seller->save();
+
+    if ($shop_name){
+        $categoria_obj = new Category($market_place_seller_info["id_category"]);
+        $categoria_obj->description = $shop_name;
+        $categoria_obj->name = array((int)Configuration::get('PS_LANG_DEFAULT') => $shop_name);
+        $categoria_obj->link_rewrite = array((int)Configuration::get('PS_LANG_DEFAULT') =>  Tools::link_rewrite($shop_name));    
+        $categoria_obj->save();
+    }
+
     
     $is_update     = Db::getInstance()->update('marketplace_shop', array(
         'shop_name' => $shop_name,

@@ -83,6 +83,10 @@
 	span .text-danger{
 		width: 100px !important;
 	}
+	.nota{
+		font-size: 10px;
+		font-style: italic;
+	}
 </style>
 <?php 
    if (isset($_REQUEST["error_msg"])){
@@ -156,9 +160,11 @@
   <div class="form-group">
   
   </div>
+  <br/>
+<center><span class="nota">El tamaño de las imagenes sugerido es de 500px de ancho por 500px de alto.</span></center><br/>
 <table class="table">
 <tr>
-	<td style="padding-left:80px;width:33%;">
+	<td style="width:33%;text-align:center;">
 		<span class="btn btn-success fileinput-button">
         	<i class="glyphicon glyphicon-plus"></i>
         	<span>Imagen 1</span>
@@ -166,7 +172,7 @@
         	<input type="hidden" name="image-1" id="image-1" value="">
     	</span>
 	</td>
-	<td style="width:33%;">
+	<td style="width:33%;text-align:center;">
 		<span class="btn btn-success fileinput-button">
         	<i class="glyphicon glyphicon-plus"></i>
         	<span>Imagen 2</span>
@@ -174,7 +180,7 @@
         	<input type="hidden" name="image-2" id="image-2" value="">
     	</span>
 	</td>
-	<td style="width:33%;">
+	<td style="width:33%;text-align:center;">
 		<span class="btn btn-success fileinput-button">
         	<i class="glyphicon glyphicon-plus"></i>
         	<span>Imagen 3</span>
@@ -184,9 +190,15 @@
 	</td>
 </tr>
 <tr>
-	<td style="padding-left:80px;"><div id="file-1" class="files"></div></td>
-	<td><div id="file-2" class="files"></div></td>
-	<td><div id="file-3" class="files"></div></td>
+	<td style="width:33%;text-align:center;">
+		<div id="file-1" class="files"></div>
+	</td>
+	<td style="width:33%;text-align:center;">
+		<div id="file-2" class="files"></div>
+	</td>
+	<td style="width:33%;text-align:center;">
+		<div id="file-3" class="files"></div>
+	</td>
 </tr>
 </table>
   	

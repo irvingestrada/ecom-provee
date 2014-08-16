@@ -34,6 +34,7 @@
 			$customer_mod = new Customer($customer->id);
 			$customer_mod->passwd = Tools::encrypt($newpassword);
 			$customer_mod->save();
+			$_SESSION["mensaje_ajax"] = "Contraseña cambiada.";
 		}
 		
 		header("location: /index.php?nav=configuracion");

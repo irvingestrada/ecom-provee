@@ -22,6 +22,8 @@
     $obj_seller->conekta_privada = $conekta_privada;
     $obj_seller->conekta_publica = $conekta_publica;
     $obj_seller->save();
+
+    $_SESSION["mensaje_ajax"] = "Llaves actualizadas.";
     
 	header("location: /index.php?nav=configuracion");
 ?>

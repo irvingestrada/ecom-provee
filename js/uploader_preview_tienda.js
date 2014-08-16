@@ -1,14 +1,14 @@
-function template_image(id,src,exist){
+function template_image(id,src){
 	var r = 0;
-	if($("#"+id).length == 0) {
-		var template = '<li style="margin-top:5px;margin-bottom:5px;"><div class="preview">'+
+	//if($("#"+id).length == 0) {
+		var template = '<li style="margin-top:5px;margin-bottom:5px;text-decoration:none;list-style-type: none;"><div class="preview">'+
                     '<span class="imageHolder">'+
-                        '<img id="'+id+'" src="'+src+'" width="20%" />'+
+                        '<img id="Prev_'+id+'" src="" width="20%" />'+
                     '</span>'+
                 '</div></li>'; 
-    	$("#preview-images").append(template); 
+    	$("#"+id).html(template); 
     	r = 1;
-	}
+	//}
     return r;
 }
 
@@ -19,6 +19,8 @@ $("document").ready(function(){
 	$('input[type=file]').change(function () {
 	    readURL(this);
 	});
+
+    
 });
 
 function readURL(input) {
@@ -26,11 +28,23 @@ function readURL(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-			var t = template_image("preview-image",e.target.result);
-			if (t==0){
-				$('#preview-image').hide();
-            	$('#preview-image').attr('src', e.target.result);
-            	$('#preview-image').show();
+            var t;
+            if (input.id=="update_shop_logo"){
+			     t = template_image("preview-images",e.target.result);
+            }else{
+                t = template_image("preview-images-banner",e.target.result);
+            }
+			if (t==1){
+                if (input.id=="update_shop_logo"){
+				   $('#Prev_preview-images').hide();
+            	   $('#Prev_preview-images').attr('src', e.target.result);
+            	   $('#Prev_preview-images').show();
+                }else{
+                   $('#Prev_preview-images-banner').hide();
+                   $('#Prev_preview-images-banner').attr('src', e.target.result);
+                   $('#Prev_preview-images-banner').show();
+                }
+
             }
             //contador_imagenes++;
         }

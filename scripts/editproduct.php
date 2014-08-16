@@ -65,6 +65,12 @@
 		 $tree .= "</ul>";
 	}
 ?>
+<style>
+.nota{
+		font-size: 10px;
+		font-style: italic;
+	}
+</style>
 <form class="form-horizontal" role="form" action="/scripts/proc_editproduct.php" method="post" enctype="multipart/form-data">
   <input type="hidden" value="<?php echo $pro_info["id_size"]; ?>" id="product_current_size" name="product_current_size">
   <input type="hidden" value="<?php echo $_POST["form_product_id"]; ?>" id="product_id" name="product_id">
@@ -171,6 +177,8 @@
   	}
 
   ?>
+<br/>
+<center><span class="nota">El tamaño de las imagenes sugerido es de 500px de ancho por 500px de alto.</span></center><br/>
 <span id="imagenes_tabla">
 
 </span>

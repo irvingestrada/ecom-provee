@@ -72,7 +72,7 @@
 			}
 			
 			if ($old_image_0){
-				$delete =  Db::getInstance()->delete('marketplace_product_image','position=0');	
+				$delete =  Db::getInstance()->delete('marketplace_product_image','position=0  AND real_image_product_id = '.$old_image_0);	
 				$image = new Image($old_image_0);
 				$status = $image->delete();
 				//Product::cleanPositions($_POST['id_product']);
@@ -103,7 +103,7 @@
 				$u_other_id .= $characters[mt_rand(0, strlen($characters))];
 			}
 			if ($old_image_1){
-				$delete =  Db::getInstance()->delete('marketplace_product_image','position=1');	
+				$delete =  Db::getInstance()->delete('marketplace_product_image','position=1 AND real_image_product_id = '.$old_image_1);	
 				$image = new Image($old_image_1);
 				$status = $image->delete();
 			}
@@ -131,7 +131,7 @@
 				$u_other_id .= $characters[mt_rand(0, strlen($characters))];
 			}
 			if ($old_image_2){
-				$delete =  Db::getInstance()->delete('marketplace_product_image','position=2');
+				$delete =  Db::getInstance()->delete('marketplace_product_image','position=2 AND real_image_product_id = '.$old_image_2);
 				$image = new Image($old_image_2);
 				$status = $image->delete();
 			}

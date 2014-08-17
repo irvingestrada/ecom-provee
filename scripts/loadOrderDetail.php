@@ -50,7 +50,7 @@
     </td>
     <td>
       <h4>Orden</h4>
-      Estatus Orden : <?php echo getRealStatus ($dashboard[0]['order_status']); ?><br/>
+      Estatus de pago : <?php echo getRealStatus ($dashboard[0]['order_status']); ?><br/>
       Dirección envio : <?php echo $dashboard[0]['address1']; ?><br/>
       Codigo Postal : <?php echo $dashboard[0]['postcode']; ?><br/>
       Ciudad : <?php echo $dashboard[0]['city']; ?><br/>

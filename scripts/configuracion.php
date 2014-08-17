@@ -15,7 +15,7 @@
 
 	require_once(_PS_MODULE_DIR_.'conektapagos/lib/Conekta.php');
 
-	Conekta::setApiKey(_CONEKTA_PRIVATE_KEY_);
+	Conekta::setApiKey($market_place_seller_info["conekta_privada"]);
 
 	try{
 
@@ -132,7 +132,7 @@ if (isset($_SESSION["mensaje_ajax"])){?>
   	<form class="form-horizontal" role="form" action="/scripts/proc_modtarjeta.php" method="post" enctype="multipart/form-data" id="tarjetaform">
 	 	<div class="form-group">
 			<label for="update_meta_description" class="col-sm-3 control-label">
-				Informacion actual
+				Tarjeta actual
             </label>
 		 	<div class="col-sm-4">
 				Tarjeta: <?php echo $customer->cards[0]->last4; ?> Tipo Tarjeta: <?php echo $customer->cards[0]->brand; ?>

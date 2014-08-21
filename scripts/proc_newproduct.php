@@ -275,5 +275,5 @@
 
 		Hook::exec('actionAddproductExtrafield', array('marketplace_product_id' => $seller_product_id));
 
-		//header("location: /index.php?nav=productos");
+		header("location: /index.php?nav=productos");
 ?>

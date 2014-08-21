@@ -47,7 +47,12 @@
         $history->id_order = (int)($id_order);
         //var_dump($estatus_aplicar);
         $history->changeIdOrderState($estatus_aplicar, $order);
-        $history->addWithemail();    
+        if (strlen($num_guia)>0){
+            $mailVars = array('{guia}' => $num_guia);
+            $history->addWithemail(true,$mailVars);
+        }else{
+            $history->addWithemail();    
+        }
     }
     
     

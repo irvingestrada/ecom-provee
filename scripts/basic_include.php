@@ -65,4 +65,71 @@ function getRealStatus ($id){
     }
   }
 
+
+function getDetailRealStatus ($id){
+    switch ($id) {
+      case 'Payment accepted':
+        return 'Pago Realizado';
+        break;
+      case 'Shipped':
+        return 'Pago Realizado';
+        break;
+      case 'Delivered':
+        return 'Pago Realizado';
+        break;
+      case 'Canceled':
+        return 'Cancelado';
+        break;
+      case 'Refund':
+        return 'Pago Realizado';
+        break;
+      case 'Tarjeta de Credito / Debito':
+        return 'Pago TC/Debito';
+        break;
+      case 'Esperando respuesta proveedor de pago':
+        return 'Pago TC/Debito';
+        break;
+      case 'Pago con Oxxo':
+        return 'Pago en Oxxo';
+        break;
+      default:
+          $pago = "Error estatus";
+        break;
+      return $pago;
+    }
+  }
+
+  function getEnviado ($id){
+    switch ($id) {
+      case 'Payment accepted':
+        return 'Sin enviar';
+        break;
+      case 'Shipped':
+        return 'Enviado';
+        break;
+      case 'Delivered':
+        return 'Entregado';
+        break;
+      case 'Canceled':
+        return 'Sin enviar';
+        break;
+      case 'Refund':
+        return 'Sin enviar';
+        break;
+      case 'Tarjeta de Credito / Debito':
+        return 'Sin enviar';
+        break;
+      case 'Esperando respuesta proveedor de pago':
+        return 'Sin enviar';
+        break;
+      case 'Pago con Oxxo':
+        return 'Sin enviar';
+        break;
+      default:
+          $pago = "Error estatus";
+        break;
+      return $pago;
+    }
+  }
+
 ?>

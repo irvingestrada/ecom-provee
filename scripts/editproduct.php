@@ -89,7 +89,7 @@
   <div class="form-group">
     <label for="product_price" class="col-sm-2 control-label">Precio:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="product_price" name="product_price" placeholder="Precio" value="<?php echo $pro_info["price"]; ?>">
+      <input type="text" class="form-control" id="product_price" name="product_price" placeholder="Precio" value="<?php echo $pro_info["price"]; ?>" onkeypress="fKeyPress(event,'NP');" required>
     </div>
   </div>
   <div class="form-group">
@@ -101,7 +101,7 @@
   <div class="form-group">
     <label for="product_costo_envio" class="col-sm-2 control-label">Costo de envio:</label>
     <div class="col-sm-10">
-      <input type="number" class="form-control" id="product_costo_envio" name="product_costo_envio" placeholder="" value="<?php echo $pro_info["costo_envio"]; ?>" onkeypress="fKeyPress(event,'N');" required pattern="[0-9]*">
+      <input type="text" class="form-control" id="product_costo_envio" name="product_costo_envio" placeholder="" value="<?php echo $pro_info["costo_envio"]; ?>" onkeypress="fKeyPress(event,'NP');" required>
     </div>
   </div>
   <?php

@@ -15,7 +15,8 @@
 
 	require_once(_PS_MODULE_DIR_.'conektapagos/lib/Conekta.php');
 
-	Conekta::setApiKey($market_place_seller_info["conekta_privada"]);
+	//Conekta::setApiKey($market_place_seller_info["conekta_privada"]);
+	Conekta::setApiKey(_CONEKTA_PRIVATE_KEY_);
 
 	try{
 

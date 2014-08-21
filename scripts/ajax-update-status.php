@@ -6,5 +6,11 @@
 	$history = new OrderHistory();
 	$history->id_order = (int)($id_order);
 	$history->changeIdOrderState($id_status, $order);
-	$history->addWithemail();
+	if (isset($_GET['id_tracking'])){
+		$mailVars =	array('{guia}' => $_GET['id_tracking']);
+		$history->addWithemail(true,$mailVars);
+	}else{
+		$history->addWithemail();	
+	}
+	
 ?>

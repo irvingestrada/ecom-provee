@@ -89,9 +89,8 @@
 		$i=0;
 		
 		$address    = BAZARINGA_PATH."modules/marketplace/img/product_img/";
-		
 		if(isset($_POST["image-1"]) && strlen($_POST["image-1"])>0) {
-			$file_exists = $_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-1"];
+			$file_exists = rawurldecode($_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-1"]);
 			if (file_exists($file_exists)){
 				$length     = 6;
 				$characters = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -121,7 +120,7 @@
 		}
 
 		if(isset($_POST["image-2"]) && strlen($_POST["image-2"])>0) {
-			$file_exists = urldecode($_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-2"]);
+			$file_exists = rawurldecode($_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-2"]);
 			if (file_exists($file_exists)){
 				$length     = 6;
 				$characters = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -143,7 +142,7 @@
 		}
 
 		if(isset($_POST["image-3"])  && strlen($_POST["image-3"])>0) {
-			$file_exists = urldecode($_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-3"]);
+			$file_exists = rawurldecode($_SERVER["DOCUMENT_ROOT"].'/scripts/files/'.$_POST["image-3"]);
 			if (file_exists($file_exists)){
 				$length     = 6;
 				$characters = "0123456789abcdefghijklmnopqrstuvwxyz";
@@ -276,5 +275,5 @@
 
 		Hook::exec('actionAddproductExtrafield', array('marketplace_product_id' => $seller_product_id));
 
-		header("location: /index.php?nav=productos");
+		//header("location: /index.php?nav=productos");
 ?>

@@ -22,7 +22,7 @@ La información mostrada a continuación es de manera de ejemplo
       <th class="col-md-3">Nombre cliente</th>
       <th class="col-md-3">Monto</th>
       <th class="col-md-3">Estatus de pago</th>
-      <th class="col-md-3">Estatus de envio</th>
+      <th class="col-md-3">Estatus envio</th>
       <th class="col-md-3">&nbsp;</th>
     </tr>
   </thead>
@@ -41,8 +41,8 @@ foreach ($dashboard as $key => $obje) { ?>
       <td><?php echo $obje['address1']; ?></td>
       <td><?php echo $obje['customer_name']; ?></td>
       <td><?php echo number_format($obje['total_price'],2,'.',','); ?></td>
-      <td><?php echo getRealStatus ($obje['order_status']); ?></td>
-      <td>Sin enviar</td>
+      <td><?php echo getDetailRealStatus ($obje['order_status']); ?></td>
+      <td><?php echo getEnviado($obje['order_status']); ?></td>
       <td>
         <button type="button" class="btn btn-success" onclick="fnCambiarEstatusEnvio(<?php echo $obje['id_order']; ?>);">Cambiar</button>
       </td>

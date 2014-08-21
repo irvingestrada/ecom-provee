@@ -53,7 +53,7 @@
     </td>
     <td>
       <h4>Orden</h4>
-      Estatus de pago : <?php echo getRealStatus ($dashboard[0]['order_status']); ?><br/>
+      Estatus de pago : <?php echo getDetailRealStatus ($dashboard[0]['order_status']); ?><br/>
       Dirección envio : <?php echo $dashboard[0]['address1']; ?><br/>
       Codigo Postal : <?php echo $dashboard[0]['postcode']; ?><br/>
       Ciudad : <?php echo $dashboard[0]['city']; ?><br/>
@@ -82,7 +82,7 @@
       <th colspan="2"><Strong>Cambiar Estatus</Strong></th>
   </tr>
   <tr>
-      <td>Estatus orden</td>
+      <td>Estatus de pago</td>
       <td>
         <select id="OrdenEstatusCambio" name="OrdenEstatusCambio">
           <option value="0">seleccionar</option>
@@ -97,7 +97,7 @@
       </td>
     </tr>
   <tr>
-      <td>Estatus envio</td>
+      <td>Estatus de envio</td>
       <td>
         <select id="OrdenEnvioCambio" name="OrdenEnvioCambio" onchange="fnChangeShipped(this.value);">
 
@@ -109,9 +109,8 @@
               $display="style='display:none'";
           ?>
           <option value="">Sin enviar</option>
-            <?php }else{ ?>
-          <option value="Shipped">Enviado</option>
             <?php } ?>
+          <option value="Shipped">Enviado</option>
           <option value="Delivered">Entregado</option>
           <?php } ?>
         </select>
